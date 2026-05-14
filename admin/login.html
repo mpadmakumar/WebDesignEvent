@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login | DesignArena</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <div class="bg-animate"></div>
+  <div class="login-wrapper">
+    <div class="login-card glass fade-in">
+      <div class="logo"><span>🔐 Admin Panel</span></div>
+      <p class="subtitle">DesignArena Competition Control</p>
+
+      <form id="admin-form" onsubmit="handleAdminLogin(event)">
+        <div class="form-group">
+          <label for="admin-user">👤 Username</label>
+          <input type="text" id="admin-user" class="form-control" placeholder="admin" required autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label for="admin-pass">🔑 Password</label>
+          <input type="password" id="admin-pass" class="form-control" placeholder="••••••••" required>
+        </div>
+        <div id="admin-error" style="color:var(--danger);font-size:.85rem;margin-bottom:16px;display:none;padding:10px;background:rgba(239,68,68,.1);border-radius:8px;border:1px solid var(--danger)"></div>
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%">🚀 Login</button>
+      </form>
+
+      <div style="margin-top:16px;text-align:center">
+        <p style="font-size:.75rem;color:var(--text-muted)">Default: admin / admin123</p>
+        <a href="../index.html" style="font-size:.8rem;color:var(--primary-light);text-decoration:none;margin-top:8px;display:block">← Back to Participant Login</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script>
+    (function(){ document.documentElement.setAttribute('data-theme', localStorage.getItem('appTheme')||'dark'); })();
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      const u = document.getElementById('admin-user').value.trim();
+      const p = document.getElementById('admin-pass').value;
+      const r = Auth.loginAdmin(u, p);
+      if (r.success) { window.location.href = 'dashboard.html'; }
+      else {
+        const err = document.getElementById('admin-error');
+        err.textContent = r.message; err.style.display = 'block';
+        document.getElementById('admin-form').classList.add('shake');
+        setTimeout(() => document.getElementById('admin-form').classList.remove('shake'), 500);
+      }
+    }
+    if (Auth.isAdminLoggedIn()) window.location.href = 'dashboard.html';
+  </script>
+</body>
+</html>

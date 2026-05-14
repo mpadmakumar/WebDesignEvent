@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace | Web Design Competition</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <div id="tracker-warning"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="brand">🎨 DesignArena</div>
+    <div class="header-actions">
+      <span style="font-size:.82rem;color:var(--text-secondary)">👤 Lot: <span id="lot-display"></span></span>
+      <div class="theme-toggle" onclick="UserApp.toggleTheme()"></div>
+      <button class="btn btn-sm btn-secondary" onclick="UserApp.toggleFullscreen()">⛶</button>
+      <button class="btn btn-danger btn-sm" onclick="Auth.logoutParticipant(); window.location.href='index.html'">Logout</button>
+    </div>
+  </header>
+
+  <!-- Challenge Bar -->
+  <div class="challenge-bar">
+    <div style="display:flex;align-items:center;gap:16px;flex:1;flex-wrap:wrap">
+      <span id="challenge-title" class="challenge-title">Loading...</span>
+      <div style="flex:1;min-width:120px">
+        <div class="progress-bar"><div class="fill" id="progress-fill" style="width:0%"></div></div>
+        <div id="progress-text" style="font-size:.7rem;color:var(--text-muted);margin-top:3px">0/0 Completed</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div id="timer" class="timer">⏱ 00:00</div>
+      <button id="btn-submit" class="btn btn-primary btn-sm" onclick="UserApp.submitChallenge()">📤 Submit</button>
+      <button id="btn-next" class="btn btn-success btn-sm" onclick="UserApp.nextChallenge()" disabled>Next ▶</button>
+    </div>
+  </div>
+
+  <!-- Workspace -->
+  <style>
+    .tab-btn {
+       padding: 8px 16px; background: transparent; border: none; color: var(--text-muted); cursor: pointer;
+       font-weight: 600; font-size: .85rem; border-bottom: 2px solid transparent; transition: all .2s;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active {
+       color: var(--primary-light); border-bottom-color: var(--primary); background: rgba(255,255,255,0.05);
+    }
+    .full-editor {
+       position: absolute; top: 0; left: 0; width: 100%; height: 100%; resize: none; border: none; border-radius: 0; background: transparent; padding: 16px;
+    }
+    .full-editor:focus { outline: none; box-shadow: none; border: none; }
+    .round-item {
+       padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 8px; cursor: pointer;
+       background: var(--surface); transition: all .2s; display: flex; flex-direction: column; gap: 4px;
+    }
+    .round-item:hover { background: rgba(124,58,237,.1); border-color: var(--primary); }
+    .round-item.active { background: rgba(124,58,237,.2); border-color: var(--primary); border-left: 4px solid var(--primary); }
+    .round-title { font-weight: 700; font-size: .95rem; color: var(--text); }
+    .round-time { font-size: .75rem; color: var(--text-muted); }
+  </style>
+
+  <div class="workspace" style="display: flex; flex-direction: row; height: calc(100vh - 106px);">
+    <!-- Left Panel: 30% Rounds and Design Image -->
+    <div class="rounds-panel" style="width: 30%; border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; position: relative;">
+      
+      <!-- List View -->
+      <div id="rounds-list-view" style="display:flex; flex-direction: column; height: 100%;">
+        <div style="padding: 12px 16px; border-bottom: 1px solid var(--border); background: rgba(10,10,20,0.5);">
+           <h3 style="font-size: .95rem; color: var(--primary-light);">📌 Design Rounds</h3>
+        </div>
+        <div id="pushed-rounds-list" style="padding: 12px; overflow-y: auto; flex: 1;">
+           <p style="color:var(--text-muted);font-size:.85rem;text-align:center;">Waiting for Admin...</p>
+        </div>
+      </div>
+
+      <!-- Detail View (Image) -->
+      <div id="round-detail-view" class="hidden" style="position: absolute; inset: 0; background: var(--bg); display: flex; flex-direction: column; z-index: 10;">
+        <div style="padding: 12px 16px; border-bottom: 1px solid var(--border); background: rgba(10,10,20,0.5); display: flex; justify-content: space-between; align-items: center;">
+           <h3 id="detail-round-title" style="font-size: .95rem; color: var(--primary-light); margin: 0;">Round Details</h3>
+           <button class="btn btn-sm btn-secondary" onclick="UserApp.closeRoundDetail()" style="padding: 4px 8px; font-size: .75rem;">❌ Back</button>
+        </div>
+        <div id="pushed-design-banner" style="flex: 1; padding: 12px; overflow-y: auto; display:flex; flex-direction:column; align-items:center;">
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: 70% Code Editor and Live Preview -->
+    <div class="editor-preview-panel" style="width: 70%; display: flex; flex-direction: row;">
+      <!-- Code Editor: 50% of the Right Panel -->
+      <div id="code-panel" style="width: 50%; display: flex; flex-direction: column; border-right: 1px solid var(--border); background: #0d1117;">
+         <div class="editor-tabs" style="display: flex; background: var(--bg2); border-bottom: 1px solid var(--border); align-items:center; overflow-x:auto; white-space:nowrap;">
+            <button id="tab-html" class="tab-btn active" onclick="UserApp.switchTab('html')">index.html</button>
+            <button id="tab-css" class="tab-btn" onclick="UserApp.switchTab('css')">style.css</button>
+            <button id="tab-js" class="tab-btn" onclick="UserApp.switchTab('js')">script.js</button>
+            <div style="flex:1; min-width:10px;"></div>
+            <button class="btn btn-sm btn-secondary" onclick="UserApp.injectFramework('tailwind')" style="margin: 4px 2px; padding:3px 8px; font-size:.72rem; background:rgba(56, 189, 248, 0.1); color:#38bdf8; border-color:rgba(56,189,248,0.3);" title="Add Tailwind CSS CDN">⚡ Tailwind</button>
+            <button class="btn btn-sm btn-secondary" onclick="UserApp.injectFramework('bootstrap')" style="margin: 4px 2px; padding:3px 8px; font-size:.72rem; background:rgba(113, 44, 249, 0.1); color:#b197fc; border-color:rgba(113,44,249,0.3);" title="Add Bootstrap 5 CDN">🅱️ Bootstrap</button>
+            <button class="btn btn-sm btn-secondary" onclick="UserApp.updatePreview()" style="margin: 4px 8px 4px 4px; padding:3px 10px; font-size:.72rem">▶ Run</button>
+         </div>
+         <div style="flex: 1; position: relative;">
+            <textarea id="editor-html" class="code-editor full-editor" oninput="UserApp.updatePreview()" spellcheck="false" placeholder="<!-- HTML here -->"></textarea>
+            <textarea id="editor-css" class="code-editor full-editor hidden" oninput="UserApp.updatePreview()" spellcheck="false" placeholder="/* CSS here */"></textarea>
+            <textarea id="editor-js" class="code-editor full-editor hidden" oninput="UserApp.updatePreview()" spellcheck="false" placeholder="// JS here"></textarea>
+         </div>
+      </div>
+
+      <!-- Live Preview: 50% of the Right Panel -->
+      <div id="preview-panel" class="preview-panel" style="width: 50%; display: flex; flex-direction: column; padding: 8px 16px;">
+        <div style="padding:6px 0;font-size:.82rem;font-weight:600;color:var(--text-secondary);display:flex;justify-content:space-between">
+          <span>👁️ Live Preview</span>
+          <span style="font-size:.7rem;color:var(--text-muted)">Auto-saves every 5s</span>
+        </div>
+        <iframe id="preview-frame" class="preview-frame" style="flex:1" sandbox="allow-scripts"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/tracker.js"></script>
+  <script src="js/user.js"></script>
+  <script>
+    (function(){ document.documentElement.setAttribute('data-theme', localStorage.getItem('appTheme')||'dark'); })();
+    document.addEventListener('DOMContentLoaded', () => UserApp.init());
+  </script>
+</body>
+</html>

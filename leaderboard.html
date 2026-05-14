@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard | Web Design Competition</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .lb-back { position:fixed; top:16px; left:16px; z-index:10; }
+  </style>
+</head>
+<body>
+  <div class="bg-animate"></div>
+  <a href="index.html" class="btn btn-secondary btn-sm lb-back">← Back</a>
+
+  <div class="leaderboard-page fade-in">
+    <div class="lb-header">
+      <div style="font-size:3rem;margin-bottom:8px">🏆</div>
+      <h1>Leaderboard</h1>
+      <p style="color:var(--text-muted);font-size:.9rem">Web Design Competition — Live Rankings</p>
+    </div>
+
+    <!-- Podium -->
+    <div class="glass" style="padding:28px;margin-bottom:28px;text-align:center">
+      <h2 style="font-size:1rem;color:var(--text-secondary);margin-bottom:20px;text-transform:uppercase;letter-spacing:.1em">🥇 Top 3 Finalists</h2>
+      <div id="podium-container"></div>
+    </div>
+
+    <!-- Full Table -->
+    <div class="glass" style="padding:24px">
+      <div class="section-header">
+        <h2>📊 Full Rankings</h2>
+        <button class="btn btn-secondary btn-sm" onclick="refreshLeaderboard()">🔄 Refresh</button>
+      </div>
+      <div id="leaderboard-table"></div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/leaderboard.js"></script>
+  <script>
+    (function(){ document.documentElement.setAttribute('data-theme', localStorage.getItem('appTheme')||'dark'); })();
+    function refreshLeaderboard() {
+      Leaderboard.calculate();
+      Leaderboard.renderPodium('podium-container');
+      Leaderboard.renderTable('leaderboard-table');
+    }
+    refreshLeaderboard();
+    // Auto-refresh every 30s
+    setInterval(refreshLeaderboard, 30000);
+  </script>
+</body>
+</html>

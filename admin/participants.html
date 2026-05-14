@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Participants | Admin</title>
+  <link rel="stylesheet" href="../css/style.css"><link rel="stylesheet" href="../css/admin.css">
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+<div class="admin-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><h2>🎨 DesignArena</h2><small>Admin Panel</small></div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item" data-page="dashboard"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="participants.html" class="nav-item" data-page="participants"><span class="nav-icon">👥</span> Participants</a>
+      <a href="monitoring.html" class="nav-item" data-page="monitoring"><span class="nav-icon">📡</span> Live Monitor</a>
+      <a href="submissions.html" class="nav-item" data-page="submissions"><span class="nav-icon">📝</span> Submissions</a>
+      <a href="results.html" class="nav-item" data-page="results"><span class="nav-icon">🏆</span> Results</a>
+      <a href="notes.html" class="nav-item" data-page="notes"><span class="nav-icon">📋</span> Notes</a>
+      <a href="designs.html" class="nav-item" data-page="designs"><span class="nav-icon">📌</span> Push Designs</a>
+      <a href="settings.html" class="nav-item" data-page="settings"><span class="nav-icon">⚙️</span> Settings</a>
+    </nav>
+    <div class="sidebar-footer"><button class="btn btn-danger btn-sm" style="width:100%" onclick="AdminApp.logout()">🚪 Logout</button></div>
+  </aside>
+  <main class="admin-main">
+    <header class="admin-header">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="sidebar-toggle" onclick="AdminApp.toggleSidebar()">☰</button>
+        <h1>👥 Participants</h1>
+      </div>
+      <div class="header-actions">
+        <span style="font-size:.85rem;color:var(--text-secondary)">👤 <span id="admin-name">Admin</span></span>
+        <div class="theme-toggle" onclick="AdminApp.toggleTheme()"></div>
+      </div>
+    </header>
+    <div class="admin-content">
+      <div class="section-header fade-in">
+        <h2>All Participants (<span id="participant-count">0</span>)</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input type="text" class="form-control" style="width:200px" placeholder="🔍 Search..." oninput="AdminApp.renderParticipants(this.value)">
+          <button class="btn btn-primary btn-sm" onclick="AdminApp.showAddParticipant()">➕ Add Participant</button>
+        </div>
+      </div>
+      <div id="participants-table" class="fade-in"></div>
+    </div>
+  </main>
+</div>
+
+<!-- Participant Modal -->
+<div class="modal-overlay" id="participant-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="modal-title">Add Participant</h3>
+      <button class="modal-close" onclick="AdminApp.closeModal('participant-modal')">✕</button>
+    </div>
+    <form id="p-form" onsubmit="event.preventDefault();AdminApp.saveParticipant()">
+      <input type="hidden" id="p-id">
+      <div class="form-group"><label>Lot Number</label><input type="text" id="p-lot" class="form-control" required placeholder="LOT001"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="AdminApp.closeModal('participant-modal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="../js/storage.js"></script><script src="../js/auth.js"></script><script src="../js/admin.js"></script>
+<script>document.addEventListener('DOMContentLoaded',()=>AdminApp.initParticipants());</script>
+</body></html>
