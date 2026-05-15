@@ -4,8 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SoftTech Association | Web Design Challenge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Montserrat:wght@400;700;900&display=swap');
+    :root {
+      --primary: #10b981; /* Emerald */
+      --secondary: #8b5cf6; /* Violet */
+      --bg: #030014;
+    }
 
     * {
       margin: 0;
@@ -14,11 +19,9 @@
     }
 
     body {
-      background: linear-gradient(-45deg, #05010a, #0d0628, #051a2e, #030810);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
+      background: var(--bg);
       color: #fff;
-      font-family: 'Share Tech Mono', monospace;
+      font-family: 'Outfit', sans-serif;
       height: 100vh;
       overflow: hidden;
       display: flex;
@@ -26,40 +29,70 @@
       align-items: center;
       justify-content: center;
       position: relative;
-      cursor: none; /* Hide default cursor */
+      cursor: none;
     }
 
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    /* Aurora Background */
+    #aurora-container {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 1;
+      filter: blur(100px);
+      opacity: 0.6;
+      overflow: hidden;
+    }
+
+    .aurora-orb {
+      position: absolute;
+      width: 60vw;
+      height: 60vw;
+      border-radius: 50%;
+      background: var(--primary);
+      animation: float 20s infinite alternate;
+      mix-blend-mode: screen;
+    }
+
+    .aurora-orb:nth-child(2) {
+      background: var(--secondary);
+      right: -10vw;
+      top: -10vw;
+      animation-duration: 25s;
+    }
+
+    .aurora-orb:nth-child(3) {
+      background: #3b82f6; /* Blue */
+      left: -10vw;
+      bottom: -10vw;
+      animation-duration: 30s;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(10vw, 5vw) scale(1.2); }
     }
 
     /* Custom Cursor */
-    .cursor {
-      width: 20px;
-      height: 20px;
-      border: 2px solid #00ffff;
+    .cursor-dot {
+      width: 8px;
+      height: 8px;
+      background: #fff;
       border-radius: 50%;
       position: fixed;
       pointer-events: none;
-      z-index: 9999;
+      z-index: 10001;
       transform: translate(-50%, -50%);
-      transition: width 0.3s, height 0.3s, background-color 0.3s;
-      mix-blend-mode: difference;
     }
 
-    .cursor-arrow {
+    .cursor-outline {
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
       position: fixed;
       pointer-events: none;
       z-index: 10000;
-      width: 0;
-      height: 0;
-      border-left: 8px solid transparent;
-      border-right: 8px solid transparent;
-      border-bottom: 18px solid #00ffff;
-      transform: translate(-50%, -50%) rotate(45deg);
-      filter: drop-shadow(0 0 5px #00ffff);
+      transition: width 0.3s, height 0.3s, border-color 0.3s;
+      transform: translate(-50%, -50%);
     }
 
     .content-wrapper {
@@ -69,129 +102,117 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 30px;
-      padding: 0 20px;
+      gap: 40px;
     }
 
     .header-box {
-      border: 1px solid rgba(0, 255, 255, 0.4);
-      padding: 15px 40px;
-      margin-bottom: 30px;
-      display: inline-block;
-      background: rgba(0, 20, 40, 0.3);
-      backdrop-filter: blur(8px);
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px 50px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
     .college-name {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-      letter-spacing: 5px;
-      color: #ffffff;
-      margin-bottom: 10px;
+      font-size: 0.9rem;
+      letter-spacing: 6px;
+      color: #cbd5e1;
+      margin-bottom: 12px;
+      font-weight: 500;
       text-transform: uppercase;
     }
 
     .dept-name {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 1rem;
       letter-spacing: 4px;
-      color: #00ffff;
-      text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
-    }
-
-    .main-title-container {
-      margin-bottom: 25px;
-      transition: transform 0.3s ease;
-    }
-    
-    .main-title-container:hover {
-      transform: scale(1.02);
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+      text-transform: uppercase;
     }
 
     .main-title-1 {
-      font-family: 'Montserrat', sans-serif;
+      font-size: 8rem;
       font-weight: 900;
-      font-size: 7.5rem;
-      line-height: 0.9;
-      letter-spacing: 10px;
-      color: #0088ff;
-      text-shadow: 0 0 20px rgba(0, 136, 255, 0.8), 0 0 40px rgba(0, 136, 255, 0.4);
+      letter-spacing: -2px;
+      line-height: 0.85;
+      color: #fff;
+      text-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
     }
 
     .main-title-2 {
-      font-family: 'Montserrat', sans-serif;
+      font-size: 6rem;
       font-weight: 900;
-      font-size: 6.5rem;
-      line-height: 1;
       letter-spacing: 15px;
-      color: #00ffff;
-      text-shadow: 0 0 20px rgba(0, 255, 255, 0.8), 0 0 40px rgba(0, 255, 255, 0.4);
-      margin-top: -10px;
+      margin-top: 10px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.4));
     }
 
     .sub-title {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 1.2rem;
-      letter-spacing: 10px;
-      color: #d1d1d1;
+      font-size: 1.1rem;
+      letter-spacing: 12px;
+      color: #94a3b8;
       text-transform: uppercase;
-      margin-bottom: 40px;
-      text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+      font-weight: 300;
     }
 
     .btn-start {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 1.4rem;
-      letter-spacing: 5px;
-      color: #00ffff;
-      background: transparent;
-      border: 1px solid rgba(0, 255, 255, 0.6);
-      padding: 18px 45px;
-      cursor: pointer;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      padding: 22px 70px;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 4px;
       text-decoration: none;
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      display: inline-block;
       position: relative;
-      background: rgba(0, 255, 255, 0.05);
+      overflow: hidden;
+      display: inline-block;
     }
 
     .btn-start:hover {
-      background: rgba(0, 255, 255, 0.2);
-      box-shadow: 0 0 30px rgba(0, 255, 255, 0.6), inset 0 0 10px rgba(0, 255, 255, 0.4);
-      color: #ffffff;
-      text-shadow: 0 0 10px #00ffff;
-      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 15px 40px rgba(16, 185, 129, 0.3);
+      border-color: var(--primary);
     }
 
     .footer {
       position: absolute;
       bottom: 20px;
       font-size: 0.75rem;
-      color: #444;
-      letter-spacing: 1px;
+      color: #475569;
+      letter-spacing: 3px;
       z-index: 10;
+      text-transform: uppercase;
     }
 
     @media (max-width: 900px) {
       .main-title-1 { font-size: 5rem; }
-      .main-title-2 { font-size: 4rem; }
-      .header-box { padding: 15px 20px; }
-      .college-name { font-size: 0.8rem; }
-      .dept-name { font-size: 0.7rem; }
+      .main-title-2 { font-size: 3rem; }
+      .header-box { padding: 15px 30px; }
     }
   </style>
 </head>
 <body>
 
   <!-- Custom Cursor -->
-  <div class="cursor"></div>
-  <div class="cursor-arrow"></div>
+  <div class="cursor-dot"></div>
+  <div class="cursor-outline"></div>
 
-  <!-- Background Animation Canvas -->
-  <canvas id="bg-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.3;"></canvas>
+  <!-- Aurora Background -->
+  <div id="aurora-container">
+    <div class="aurora-orb"></div>
+    <div class="aurora-orb"></div>
+    <div class="aurora-orb"></div>
+  </div>
 
   <div class="content-wrapper">
     
@@ -210,83 +231,54 @@
     </div>
 
     <a href="login.html" class="btn-start">
-      > START_SYSTEM
+      START SYSTEM
     </a>
 
   </div>
 
   <div class="footer">
-    © 2026 Ayya Nadar Janaki Ammal College. Dept. of Computer Applications. All rights reserved.
+    © 2026 ANJAC. DEPT OF COMPUTER APPLICATIONS.
   </div>
 
   <script>
-    // Custom Cursor Logic
-    const cursor = document.querySelector('.cursor');
-    const arrow = document.querySelector('.cursor-arrow');
+    const dot = document.querySelector('.cursor-dot');
+    const outline = document.querySelector('.cursor-outline');
+    const orbs = document.querySelectorAll('.aurora-orb');
 
     document.addEventListener('mousemove', (e) => {
-      cursor.style.left = e.clientX + 'px';
-      cursor.style.top = e.clientY + 'px';
+      const { clientX, clientY } = e;
+
+      dot.style.left = `${clientX}px`;
+      dot.style.top = `${clientY}px`;
       
-      setTimeout(() => {
-        arrow.style.left = e.clientX + 'px';
-        arrow.style.top = e.clientY + 'px';
-      }, 50);
-    });
+      outline.animate({
+        left: `${clientX}px`,
+        top: `${clientY}px`
+      }, { duration: 500, fill: "forwards" });
 
-    document.querySelectorAll('a, button').forEach(el => {
-      el.addEventListener('mouseenter', () => {
-        cursor.style.width = '40px';
-        cursor.style.height = '40px';
-        cursor.style.backgroundColor = 'rgba(0, 255, 255, 0.1)';
-      });
-      el.addEventListener('mouseleave', () => {
-        cursor.style.width = '20px';
-        cursor.style.height = '20px';
-        cursor.style.backgroundColor = 'transparent';
+      // Interactive Orbs movement based on mouse
+      orbs.forEach((orb, index) => {
+        const speed = (index + 1) * 0.05;
+        const x = (window.innerWidth - clientX * speed) / 100;
+        const y = (window.innerHeight - clientY * speed) / 100;
+        orb.style.transform = `translate(${x}px, ${y}px)`;
       });
     });
 
-    // Digital Rain Animation Logic
-    const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
+    const btn = document.querySelector('.btn-start');
+    btn.addEventListener('mouseenter', () => {
+      outline.style.width = '90px';
+      outline.style.height = '90px';
+      outline.style.borderColor = '#10b981';
+      outline.style.backgroundColor = 'rgba(16, 185, 129, 0.05)';
+    });
 
-    let width, height;
-    function resize() {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    const characters = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ$+-*/=%"\'#&_(),.;:?!\\|{}<>[]^~';
-    const fontSize = 16;
-    const columns = Math.floor(width / fontSize);
-    const drops = [];
-
-    for (let i = 0; i < columns; i++) {
-      drops[i] = Math.random() * -100;
-    }
-
-    function drawRain() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-      ctx.fillRect(0, 0, width, height);
-
-      ctx.fillStyle = '#00ffff';
-      ctx.font = fontSize + 'px Share Tech Mono';
-
-      for (let i = 0; i < drops.length; i++) {
-        const text = characters.charAt(Math.floor(Math.random() * characters.length));
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-        if (drops[i] * fontSize > height && Math.random() > 0.975) {
-          drops[i] = 0;
-        }
-        drops[i]++;
-      }
-    }
-
-    setInterval(drawRain, 50);
+    btn.addEventListener('mouseleave', () => {
+      outline.style.width = '40px';
+      outline.style.height = '40px';
+      outline.style.borderColor = 'rgba(255, 255, 255, 0.5)';
+      outline.style.backgroundColor = 'transparent';
+    });
   </script>
 </body>
 </html>
