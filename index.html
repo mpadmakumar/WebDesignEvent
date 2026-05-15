@@ -4,24 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SoftTech Association | Web Design Challenge</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --primary: #10b981; /* Emerald */
-      --secondary: #8b5cf6; /* Violet */
-      --bg: #030014;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: var(--bg);
+      background: #0a0a0f;
       color: #fff;
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Rajdhani', sans-serif;
       height: 100vh;
       overflow: hidden;
       display: flex;
@@ -32,253 +22,377 @@
       cursor: none;
     }
 
-    /* Aurora Background */
-    #aurora-container {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      z-index: 1;
-      filter: blur(100px);
-      opacity: 0.6;
-      overflow: hidden;
+    /* ═══════════ CANVAS BACKGROUND ═══════════ */
+    canvas#bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
     }
 
-    .aurora-orb {
-      position: absolute;
-      width: 60vw;
-      height: 60vw;
-      border-radius: 50%;
-      background: var(--primary);
-      animation: float 20s infinite alternate;
-      mix-blend-mode: screen;
-    }
-
-    .aurora-orb:nth-child(2) {
-      background: var(--secondary);
-      right: -10vw;
-      top: -10vw;
-      animation-duration: 25s;
-    }
-
-    .aurora-orb:nth-child(3) {
-      background: #3b82f6; /* Blue */
-      left: -10vw;
-      bottom: -10vw;
-      animation-duration: 30s;
-    }
-
-    @keyframes float {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(10vw, 5vw) scale(1.2); }
-    }
-
-    /* Custom Cursor */
+    /* ═══════════ CUSTOM CURSOR ═══════════ */
     .cursor-dot {
-      width: 8px;
-      height: 8px;
-      background: #fff;
+      width: 6px; height: 6px;
+      background: #ff6b35;
       border-radius: 50%;
       position: fixed;
       pointer-events: none;
       z-index: 10001;
-      transform: translate(-50%, -50%);
+      box-shadow: 0 0 10px #ff6b35, 0 0 20px #ff6b35;
+      transition: transform 0.05s;
     }
 
-    .cursor-outline {
-      width: 40px;
-      height: 40px;
-      border: 1px solid rgba(255, 255, 255, 0.5);
+    .cursor-ring {
+      width: 36px; height: 36px;
+      border: 1.5px solid rgba(255, 107, 53, 0.6);
       border-radius: 50%;
       position: fixed;
       pointer-events: none;
       z-index: 10000;
-      transition: width 0.3s, height 0.3s, border-color 0.3s;
-      transform: translate(-50%, -50%);
+      transition: width 0.4s, height 0.4s, border-color 0.3s, background 0.3s;
     }
 
-    .content-wrapper {
+    /* ═══════════ CONTENT ═══════════ */
+    .content {
       position: relative;
       z-index: 10;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 40px;
+      gap: 35px;
     }
 
+    /* ── Header Box ── */
     .header-box {
-      background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 20px 50px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 107, 53, 0.25);
+      padding: 18px 55px;
+      position: relative;
+      background: rgba(255, 107, 53, 0.03);
+    }
+
+    /* Corner accents */
+    .header-box::before, .header-box::after {
+      content: '';
+      position: absolute;
+      width: 12px; height: 12px;
+      border-color: #ff6b35;
+      border-style: solid;
+    }
+    .header-box::before {
+      top: -1px; left: -1px;
+      border-width: 2px 0 0 2px;
+    }
+    .header-box::after {
+      bottom: -1px; right: -1px;
+      border-width: 0 2px 2px 0;
     }
 
     .college-name {
-      font-size: 0.9rem;
-      letter-spacing: 6px;
-      color: #cbd5e1;
-      margin-bottom: 12px;
-      font-weight: 500;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 5px;
+      color: #e8e8e8;
       text-transform: uppercase;
     }
 
     .dept-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
       font-size: 1rem;
       letter-spacing: 4px;
-      background: linear-gradient(to right, var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #ff6b35;
+      margin-top: 6px;
+    }
+
+    /* ── Main Title ── */
+    .title-1 {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: 7.5rem;
+      letter-spacing: 8px;
+      line-height: 0.9;
+      color: #ff6b35;
+      text-shadow:
+        0 0 10px rgba(255, 107, 53, 0.6),
+        0 0 40px rgba(255, 107, 53, 0.3),
+        0 0 80px rgba(255, 107, 53, 0.15);
+      animation: titleGlow 4s ease-in-out infinite alternate;
+    }
+
+    .title-2 {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: 5rem;
+      letter-spacing: 22px;
+      color: #ffa94d;
+      text-shadow:
+        0 0 10px rgba(255, 169, 77, 0.5),
+        0 0 30px rgba(255, 169, 77, 0.2);
+      margin-top: 5px;
+    }
+
+    @keyframes titleGlow {
+      0% { text-shadow: 0 0 10px rgba(255,107,53,0.6), 0 0 40px rgba(255,107,53,0.3); }
+      100% { text-shadow: 0 0 20px rgba(255,107,53,0.8), 0 0 60px rgba(255,107,53,0.5), 0 0 100px rgba(255,107,53,0.2); }
+    }
+
+    /* ── Subtitle ── */
+    .subtitle {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.15rem;
+      letter-spacing: 10px;
+      color: #888;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    /* ── CTA Button ── */
+    .btn-cta {
+      font-family: 'Rajdhani', sans-serif;
       font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    .main-title-1 {
-      font-size: 8rem;
-      font-weight: 900;
-      letter-spacing: -2px;
-      line-height: 0.85;
-      color: #fff;
-      text-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
-    }
-
-    .main-title-2 {
-      font-size: 6rem;
-      font-weight: 900;
-      letter-spacing: 15px;
-      margin-top: 10px;
-      background: linear-gradient(to right, var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.4));
-    }
-
-    .sub-title {
-      font-size: 1.1rem;
-      letter-spacing: 12px;
-      color: #94a3b8;
-      text-transform: uppercase;
-      font-weight: 300;
-    }
-
-    .btn-start {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #fff;
-      padding: 22px 70px;
-      border-radius: 50px;
-      font-size: 1.2rem;
-      font-weight: 600;
-      letter-spacing: 4px;
+      font-size: 1.3rem;
+      letter-spacing: 5px;
+      color: #ff6b35;
+      background: transparent;
+      border: 1px solid rgba(255, 107, 53, 0.4);
+      padding: 16px 50px;
       text-decoration: none;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       position: relative;
       overflow: hidden;
+      transition: all 0.4s ease;
       display: inline-block;
     }
 
-    .btn-start:hover {
-      background: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 15px 40px rgba(16, 185, 129, 0.3);
-      border-color: var(--primary);
+    .btn-cta::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,107,53,0.15), transparent);
+      transition: left 0.5s ease;
     }
 
+    .btn-cta:hover {
+      background: rgba(255, 107, 53, 0.08);
+      box-shadow: 0 0 25px rgba(255, 107, 53, 0.3), inset 0 0 10px rgba(255, 107, 53, 0.1);
+      color: #fff;
+    }
+
+    .btn-cta:hover::before {
+      left: 100%;
+    }
+
+    /* ── Footer ── */
     .footer {
       position: absolute;
-      bottom: 20px;
-      font-size: 0.75rem;
-      color: #475569;
-      letter-spacing: 3px;
+      bottom: 22px;
+      font-size: 0.7rem;
+      color: #444;
+      letter-spacing: 2px;
       z-index: 10;
       text-transform: uppercase;
     }
 
+    /* ── Responsive ── */
     @media (max-width: 900px) {
-      .main-title-1 { font-size: 5rem; }
-      .main-title-2 { font-size: 3rem; }
-      .header-box { padding: 15px 30px; }
+      .title-1 { font-size: 4.5rem; letter-spacing: 4px; }
+      .title-2 { font-size: 3rem; letter-spacing: 12px; }
+      .header-box { padding: 14px 25px; }
+      .college-name { font-size: 0.8rem; letter-spacing: 3px; }
+      .subtitle { font-size: 0.9rem; letter-spacing: 5px; }
+    }
+
+    @media (max-width: 500px) {
+      .title-1 { font-size: 3rem; }
+      .title-2 { font-size: 2rem; letter-spacing: 8px; }
     }
   </style>
 </head>
 <body>
 
   <!-- Custom Cursor -->
-  <div class="cursor-dot"></div>
-  <div class="cursor-outline"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
 
-  <!-- Aurora Background -->
-  <div id="aurora-container">
-    <div class="aurora-orb"></div>
-    <div class="aurora-orb"></div>
-    <div class="aurora-orb"></div>
-  </div>
+  <!-- Background Canvas -->
+  <canvas id="bg"></canvas>
 
-  <div class="content-wrapper">
-    
+  <!-- Main Content -->
+  <div class="content">
+
     <div class="header-box">
-      <div class="college-name">AYYA NADAR JANAKI AMMAL COLLEGE</div>
-      <div class="dept-name">DEPARTMENT OF COMPUTER APPLICATIONS</div>
+      <div class="college-name">Ayya Nadar Janaki Ammal College</div>
+      <div class="dept-name">Department of Computer Applications</div>
     </div>
 
-    <div class="main-title-container">
-      <div class="main-title-1">SOFTTECH</div>
-      <div class="main-title-2">ASSOCIATION</div>
+    <div>
+      <div class="title-1">SOFTTECH</div>
+      <div class="title-2">ASSOCIATION</div>
     </div>
 
-    <div class="sub-title">
-      THE ULTIMATE WEB DESIGN CHALLENGE
-    </div>
+    <div class="subtitle">The Ultimate Web Design Challenge</div>
 
-    <a href="login.html" class="btn-start">
-      START SYSTEM
-    </a>
+    <a href="login.html" class="btn-cta" id="ctaBtn">> START_SYSTEM</a>
 
   </div>
 
-  <div class="footer">
-    © 2026 ANJAC. DEPT OF COMPUTER APPLICATIONS.
-  </div>
+  <div class="footer">© 2026 Ayya Nadar Janaki Ammal College · Dept. of Computer Applications</div>
 
   <script>
-    const dot = document.querySelector('.cursor-dot');
-    const outline = document.querySelector('.cursor-outline');
-    const orbs = document.querySelectorAll('.aurora-orb');
+  // ════════════════════════════════════════════
+  //  CONSTELLATION BACKGROUND (Orange + Purple)
+  // ════════════════════════════════════════════
+  const canvas = document.getElementById('bg');
+  const ctx = canvas.getContext('2d');
+  let W, H;
 
-    document.addEventListener('mousemove', (e) => {
-      const { clientX, clientY } = e;
+  function resize() {
+    W = canvas.width = innerWidth;
+    H = canvas.height = innerHeight;
+  }
+  addEventListener('resize', resize);
+  resize();
 
-      dot.style.left = `${clientX}px`;
-      dot.style.top = `${clientY}px`;
-      
-      outline.animate({
-        left: `${clientX}px`,
-        top: `${clientY}px`
-      }, { duration: 500, fill: "forwards" });
+  // Stars
+  const STAR_COUNT = 120;
+  const stars = [];
+  const LINK_DIST = 160;
 
-      // Interactive Orbs movement based on mouse
-      orbs.forEach((orb, index) => {
-        const speed = (index + 1) * 0.05;
-        const x = (window.innerWidth - clientX * speed) / 100;
-        const y = (window.innerHeight - clientY * speed) / 100;
-        orb.style.transform = `translate(${x}px, ${y}px)`;
-      });
-    });
+  class Star {
+    constructor() {
+      this.reset();
+    }
+    reset() {
+      this.x = Math.random() * W;
+      this.y = Math.random() * H;
+      this.vx = (Math.random() - 0.5) * 0.4;
+      this.vy = (Math.random() - 0.5) * 0.4;
+      this.r = Math.random() * 2 + 1;
+      // Color palette: orange, amber, purple, coral
+      const palettes = [
+        [255, 107, 53],   // Burnt Orange
+        [255, 169, 77],   // Amber
+        [160, 80, 220],   // Purple
+        [255, 130, 90],   // Coral
+      ];
+      this.c = palettes[Math.floor(Math.random() * palettes.length)];
+      this.twinkle = Math.random() * Math.PI * 2;
+    }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.twinkle += 0.02;
+      if (this.x < -10 || this.x > W + 10 || this.y < -10 || this.y > H + 10) {
+        this.reset();
+        // re-enter from an edge
+        if (Math.random() > 0.5) { this.x = Math.random() > 0.5 ? -5 : W + 5; this.y = Math.random() * H; }
+        else { this.y = Math.random() > 0.5 ? -5 : H + 5; this.x = Math.random() * W; }
+      }
+    }
+    draw() {
+      const alpha = 0.6 + 0.4 * Math.sin(this.twinkle);
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${this.c[0]},${this.c[1]},${this.c[2]},${alpha})`;
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = `rgba(${this.c[0]},${this.c[1]},${this.c[2]},0.8)`;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  }
 
-    const btn = document.querySelector('.btn-start');
-    btn.addEventListener('mouseenter', () => {
-      outline.style.width = '90px';
-      outline.style.height = '90px';
-      outline.style.borderColor = '#10b981';
-      outline.style.backgroundColor = 'rgba(16, 185, 129, 0.05)';
-    });
+  for (let i = 0; i < STAR_COUNT; i++) stars.push(new Star());
 
-    btn.addEventListener('mouseleave', () => {
-      outline.style.width = '40px';
-      outline.style.height = '40px';
-      outline.style.borderColor = 'rgba(255, 255, 255, 0.5)';
-      outline.style.backgroundColor = 'transparent';
-    });
+  // Mouse interaction
+  let mx = -1000, my = -1000;
+  addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+  function loop() {
+    ctx.fillStyle = 'rgba(10, 10, 15, 0.15)';
+    ctx.fillRect(0, 0, W, H);
+
+    // Draw connecting lines
+    for (let i = 0; i < stars.length; i++) {
+      stars[i].update();
+      stars[i].draw();
+      for (let j = i + 1; j < stars.length; j++) {
+        const dx = stars[i].x - stars[j].x;
+        const dy = stars[i].y - stars[j].y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < LINK_DIST) {
+          const alpha = (1 - d / LINK_DIST) * 0.18;
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(255, 140, 60, ${alpha})`;
+          ctx.lineWidth = 0.6;
+          ctx.moveTo(stars[i].x, stars[i].y);
+          ctx.lineTo(stars[j].x, stars[j].y);
+          ctx.stroke();
+        }
+      }
+      // Mouse proximity glow line
+      const mdx = stars[i].x - mx;
+      const mdy = stars[i].y - my;
+      const md = Math.sqrt(mdx * mdx + mdy * mdy);
+      if (md < 200) {
+        const alpha = (1 - md / 200) * 0.35;
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(255, 107, 53, ${alpha})`;
+        ctx.lineWidth = 0.8;
+        ctx.moveTo(stars[i].x, stars[i].y);
+        ctx.lineTo(mx, my);
+        ctx.stroke();
+      }
+    }
+    requestAnimationFrame(loop);
+  }
+
+  // Clear once at start to avoid trail on load
+  ctx.fillStyle = '#0a0a0f';
+  ctx.fillRect(0, 0, W, H);
+  loop();
+
+  // ════════════════════════════════════════════
+  //  CUSTOM CURSOR
+  // ════════════════════════════════════════════
+  const dot = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  let ringX = 0, ringY = 0, dotX = 0, dotY = 0;
+
+  document.addEventListener('mousemove', e => {
+    dotX = e.clientX;
+    dotY = e.clientY;
+    dot.style.left = dotX - 3 + 'px';
+    dot.style.top = dotY - 3 + 'px';
+  });
+
+  // Smooth ring follow
+  function animateRing() {
+    ringX += (dotX - ringX) * 0.12;
+    ringY += (dotY - ringY) * 0.12;
+    ring.style.left = ringX - 18 + 'px';
+    ring.style.top = ringY - 18 + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  // Hover effects
+  const ctaBtn = document.getElementById('ctaBtn');
+  ctaBtn.addEventListener('mouseenter', () => {
+    ring.style.width = '70px';
+    ring.style.height = '70px';
+    ring.style.borderColor = '#ffa94d';
+    ring.style.background = 'rgba(255, 107, 53, 0.06)';
+    ring.style.left = dotX - 35 + 'px';
+    ring.style.top = dotY - 35 + 'px';
+  });
+  ctaBtn.addEventListener('mouseleave', () => {
+    ring.style.width = '36px';
+    ring.style.height = '36px';
+    ring.style.borderColor = 'rgba(255, 107, 53, 0.6)';
+    ring.style.background = 'transparent';
+  });
   </script>
 </body>
 </html>
