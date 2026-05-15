@@ -190,6 +190,9 @@
   <div class="cursor"></div>
   <div class="cursor-arrow"></div>
 
+  <!-- Background Animation Canvas -->
+  <canvas id="bg-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.3;"></canvas>
+
   <div class="content-wrapper">
     
     <div class="header-box">
@@ -217,6 +220,7 @@
   </div>
 
   <script>
+    // Custom Cursor Logic
     const cursor = document.querySelector('.cursor');
     const arrow = document.querySelector('.cursor-arrow');
 
@@ -224,7 +228,6 @@
       cursor.style.left = e.clientX + 'px';
       cursor.style.top = e.clientY + 'px';
       
-      // Smoothly move the arrow with a slight delay
       setTimeout(() => {
         arrow.style.left = e.clientX + 'px';
         arrow.style.top = e.clientY + 'px';
@@ -243,6 +246,47 @@
         cursor.style.backgroundColor = 'transparent';
       });
     });
+
+    // Digital Rain Animation Logic
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let width, height;
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const characters = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ$+-*/=%"\'#&_(),.;:?!\\|{}<>[]^~';
+    const fontSize = 16;
+    const columns = Math.floor(width / fontSize);
+    const drops = [];
+
+    for (let i = 0; i < columns; i++) {
+      drops[i] = Math.random() * -100;
+    }
+
+    function drawRain() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.fillStyle = '#00ffff';
+      ctx.font = fontSize + 'px Share Tech Mono';
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = characters.charAt(Math.floor(Math.random() * characters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+
+    setInterval(drawRain, 50);
   </script>
 </body>
 </html>
