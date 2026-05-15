@@ -9,50 +9,57 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: #0a0a0f;
-      color: #fff;
+      background: #2b2d42;
+      color: #edf2f4;
       font-family: 'Rajdhani', sans-serif;
       height: 100vh;
       overflow: hidden;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       position: relative;
       cursor: none;
     }
 
-    /* ═══════════ CANVAS BACKGROUND ═══════════ */
-    canvas#bg {
+    /* ═══ BACKGROUND CANVAS ═══ */
+    canvas#geo {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
       z-index: 0;
     }
 
-    /* ═══════════ CUSTOM CURSOR ═══════════ */
-    .cursor-dot {
+    /* ═══ VIGNETTE OVERLAY ═══ */
+    .vignette {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: radial-gradient(ellipse at center, transparent 50%, rgba(43,45,66,0.8) 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* ═══ CURSOR ═══ */
+    .c-dot {
       width: 6px; height: 6px;
-      background: #ff6b35;
+      background: #ef233c;
       border-radius: 50%;
       position: fixed;
       pointer-events: none;
       z-index: 10001;
-      box-shadow: 0 0 10px #ff6b35, 0 0 20px #ff6b35;
-      transition: transform 0.05s;
+      box-shadow: 0 0 6px #ef233c, 0 0 14px rgba(239,35,60,0.5);
     }
-
-    .cursor-ring {
+    .c-ring {
       width: 36px; height: 36px;
-      border: 1.5px solid rgba(255, 107, 53, 0.6);
+      border: 1.5px solid rgba(239, 35, 60, 0.4);
       border-radius: 50%;
       position: fixed;
       pointer-events: none;
       z-index: 10000;
-      transition: width 0.4s, height 0.4s, border-color 0.3s, background 0.3s;
+      transition: width 0.35s, height 0.35s, border-color 0.3s, background 0.3s;
     }
 
-    /* ═══════════ CONTENT ═══════════ */
+    /* ═══ CONTENT ═══ */
     .content {
       position: relative;
       z-index: 10;
@@ -60,136 +67,125 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 35px;
+      gap: 38px;
     }
 
-    /* ── Header Box ── */
-    .header-box {
-      border: 1px solid rgba(255, 107, 53, 0.25);
-      padding: 18px 55px;
+    /* ── Header ── */
+    .hbox {
+      padding: 20px 60px;
       position: relative;
-      background: rgba(255, 107, 53, 0.03);
+      background: rgba(43, 45, 66, 0.6);
+      backdrop-filter: blur(12px);
+      border-left: 3px solid #ef233c;
+      border-right: 3px solid #ef233c;
     }
 
-    /* Corner accents */
-    .header-box::before, .header-box::after {
+    .hbox::before, .hbox::after {
       content: '';
       position: absolute;
-      width: 12px; height: 12px;
-      border-color: #ff6b35;
-      border-style: solid;
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg, #ef233c 0%, rgba(141,153,174,0.3) 50%, #ef233c 100%);
+      left: 0;
     }
-    .header-box::before {
-      top: -1px; left: -1px;
-      border-width: 2px 0 0 2px;
-    }
-    .header-box::after {
-      bottom: -1px; right: -1px;
-      border-width: 0 2px 2px 0;
-    }
+    .hbox::before { top: 0; }
+    .hbox::after { bottom: 0; }
 
-    .college-name {
-      font-family: 'Rajdhani', sans-serif;
+    .col-name {
       font-weight: 700;
-      font-size: 1.05rem;
-      letter-spacing: 5px;
-      color: #e8e8e8;
+      font-size: 1.1rem;
+      letter-spacing: 6px;
+      color: #edf2f4;
       text-transform: uppercase;
     }
 
-    .dept-name {
-      font-family: 'Rajdhani', sans-serif;
+    .dep-name {
       font-weight: 700;
       font-size: 1rem;
       letter-spacing: 4px;
-      color: #ff6b35;
-      margin-top: 6px;
+      color: #ef233c;
+      margin-top: 8px;
     }
 
-    /* ── Main Title ── */
-    .title-1 {
+    /* ── Titles ── */
+    .t1 {
       font-family: 'Orbitron', sans-serif;
       font-weight: 900;
-      font-size: 7.5rem;
-      letter-spacing: 8px;
-      line-height: 0.9;
-      color: #ff6b35;
-      text-shadow:
-        0 0 10px rgba(255, 107, 53, 0.6),
-        0 0 40px rgba(255, 107, 53, 0.3),
-        0 0 80px rgba(255, 107, 53, 0.15);
-      animation: titleGlow 4s ease-in-out infinite alternate;
+      font-size: 8rem;
+      letter-spacing: 10px;
+      line-height: 0.88;
+      color: #edf2f4;
+      text-shadow: 0 0 40px rgba(239, 35, 60, 0.25);
+      position: relative;
     }
 
-    .title-2 {
+    /* Red underline accent */
+    .t1::after {
+      content: '';
+      display: block;
+      width: 60%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #ef233c, transparent);
+      margin: 12px auto 0;
+    }
+
+    .t2 {
       font-family: 'Orbitron', sans-serif;
       font-weight: 900;
-      font-size: 5rem;
-      letter-spacing: 22px;
-      color: #ffa94d;
-      text-shadow:
-        0 0 10px rgba(255, 169, 77, 0.5),
-        0 0 30px rgba(255, 169, 77, 0.2);
-      margin-top: 5px;
-    }
-
-    @keyframes titleGlow {
-      0% { text-shadow: 0 0 10px rgba(255,107,53,0.6), 0 0 40px rgba(255,107,53,0.3); }
-      100% { text-shadow: 0 0 20px rgba(255,107,53,0.8), 0 0 60px rgba(255,107,53,0.5), 0 0 100px rgba(255,107,53,0.2); }
+      font-size: 5.5rem;
+      letter-spacing: 24px;
+      color: #ef233c;
+      text-shadow: 0 0 30px rgba(239, 35, 60, 0.3);
+      margin-top: 8px;
     }
 
     /* ── Subtitle ── */
-    .subtitle {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 1.15rem;
+    .sub {
+      font-size: 1.2rem;
       letter-spacing: 10px;
-      color: #888;
+      color: #8d99ae;
       text-transform: uppercase;
       font-weight: 500;
     }
 
-    /* ── CTA Button ── */
-    .btn-cta {
+    /* ── CTA ── */
+    .cta {
       font-family: 'Rajdhani', sans-serif;
       font-weight: 700;
       font-size: 1.3rem;
       letter-spacing: 5px;
-      color: #ff6b35;
+      color: #edf2f4;
       background: transparent;
-      border: 1px solid rgba(255, 107, 53, 0.4);
-      padding: 16px 50px;
+      border: 1px solid rgba(239, 35, 60, 0.4);
+      padding: 16px 55px;
       text-decoration: none;
       position: relative;
       overflow: hidden;
       transition: all 0.4s ease;
-      display: inline-block;
     }
 
-    .btn-cta::before {
+    .cta::after {
       content: '';
       position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,107,53,0.15), transparent);
-      transition: left 0.5s ease;
+      bottom: 0; left: 0;
+      width: 0; height: 2px;
+      background: #ef233c;
+      transition: width 0.4s ease;
     }
 
-    .btn-cta:hover {
-      background: rgba(255, 107, 53, 0.08);
-      box-shadow: 0 0 25px rgba(255, 107, 53, 0.3), inset 0 0 10px rgba(255, 107, 53, 0.1);
-      color: #fff;
+    .cta:hover {
+      background: rgba(239, 35, 60, 0.08);
+      border-color: #ef233c;
+      box-shadow: 0 0 25px rgba(239, 35, 60, 0.15);
     }
 
-    .btn-cta:hover::before {
-      left: 100%;
-    }
+    .cta:hover::after { width: 100%; }
 
     /* ── Footer ── */
-    .footer {
+    .foot {
       position: absolute;
       bottom: 22px;
       font-size: 0.7rem;
-      color: #444;
+      color: #555;
       letter-spacing: 2px;
       z-index: 10;
       text-transform: uppercase;
@@ -197,200 +193,287 @@
 
     /* ── Responsive ── */
     @media (max-width: 900px) {
-      .title-1 { font-size: 4.5rem; letter-spacing: 4px; }
-      .title-2 { font-size: 3rem; letter-spacing: 12px; }
-      .header-box { padding: 14px 25px; }
-      .college-name { font-size: 0.8rem; letter-spacing: 3px; }
-      .subtitle { font-size: 0.9rem; letter-spacing: 5px; }
+      .t1 { font-size: 4.5rem; letter-spacing: 5px; }
+      .t2 { font-size: 3rem; letter-spacing: 14px; }
+      .hbox { padding: 14px 25px; }
+      .col-name { font-size: 0.85rem; }
+      .sub { font-size: 0.9rem; letter-spacing: 5px; }
     }
-
     @media (max-width: 500px) {
-      .title-1 { font-size: 3rem; }
-      .title-2 { font-size: 2rem; letter-spacing: 8px; }
+      .t1 { font-size: 3rem; }
+      .t2 { font-size: 2rem; letter-spacing: 8px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Custom Cursor -->
-  <div class="cursor-dot" id="cursorDot"></div>
-  <div class="cursor-ring" id="cursorRing"></div>
+  <div class="c-dot" id="cDot"></div>
+  <div class="c-ring" id="cRing"></div>
+  <div class="vignette"></div>
 
-  <!-- Background Canvas -->
-  <canvas id="bg"></canvas>
+  <canvas id="geo"></canvas>
 
-  <!-- Main Content -->
   <div class="content">
-
-    <div class="header-box">
-      <div class="college-name">Ayya Nadar Janaki Ammal College</div>
-      <div class="dept-name">Department of Computer Applications</div>
+    <div class="hbox">
+      <div class="col-name">Ayya Nadar Janaki Ammal College</div>
+      <div class="dep-name">Department of Computer Applications</div>
     </div>
 
     <div>
-      <div class="title-1">SOFTTECH</div>
-      <div class="title-2">ASSOCIATION</div>
+      <div class="t1">SOFTTECH</div>
+      <div class="t2">ASSOCIATION</div>
     </div>
 
-    <div class="subtitle">The Ultimate Web Design Challenge</div>
+    <div class="sub">The Ultimate Web Design Challenge</div>
 
-    <a href="login.html" class="btn-cta" id="ctaBtn">> START_SYSTEM</a>
-
+    <a href="login.html" class="cta" id="ctaBtn">> START_SYSTEM</a>
   </div>
 
-  <div class="footer">© 2026 Ayya Nadar Janaki Ammal College · Dept. of Computer Applications</div>
+  <div class="foot">© 2026 Ayya Nadar Janaki Ammal College · Dept. of Computer Applications</div>
 
   <script>
-  // ════════════════════════════════════════════
-  //  CONSTELLATION BACKGROUND (Orange + Purple)
-  // ════════════════════════════════════════════
-  const canvas = document.getElementById('bg');
-  const ctx = canvas.getContext('2d');
+  // ═══════════════════════════════════════════
+  //  FLOATING WIREFRAME GEOMETRY ANIMATION
+  //  (Unique: NOT particles, NOT grid, NOT scan)
+  // ═══════════════════════════════════════════
+  const cv = document.getElementById('geo');
+  const cx = cv.getContext('2d');
   let W, H;
 
-  function resize() {
-    W = canvas.width = innerWidth;
-    H = canvas.height = innerHeight;
-  }
+  function resize() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
   addEventListener('resize', resize);
   resize();
 
-  // Stars
-  const STAR_COUNT = 120;
-  const stars = [];
-  const LINK_DIST = 160;
+  // Colors from palette
+  const C = {
+    dark: '#2b2d42',
+    gray: '#8d99ae',
+    light: '#edf2f4',
+    red: '#ef233c'
+  };
 
-  class Star {
+  let mx = -500, my = -500;
+  addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+  // ─── Floating Shapes ───
+  class Shape {
     constructor() {
-      this.reset();
-    }
-    reset() {
       this.x = Math.random() * W;
       this.y = Math.random() * H;
       this.vx = (Math.random() - 0.5) * 0.4;
       this.vy = (Math.random() - 0.5) * 0.4;
-      this.r = Math.random() * 2 + 1;
-      // Color palette: orange, amber, purple, coral
-      const palettes = [
-        [255, 107, 53],   // Burnt Orange
-        [255, 169, 77],   // Amber
-        [160, 80, 220],   // Purple
-        [255, 130, 90],   // Coral
-      ];
-      this.c = palettes[Math.floor(Math.random() * palettes.length)];
-      this.twinkle = Math.random() * Math.PI * 2;
+      this.rot = Math.random() * Math.PI * 2;
+      this.rotSpeed = (Math.random() - 0.5) * 0.008;
+      this.size = Math.random() * 40 + 20;
+      this.sides = [3, 4, 5, 6][Math.floor(Math.random() * 4)]; // tri, sq, pent, hex
+      this.alpha = Math.random() * 0.15 + 0.05;
+      this.baseAlpha = this.alpha;
+      this.isRed = Math.random() < 0.2; // 20% chance red accent
     }
+
     update() {
       this.x += this.vx;
       this.y += this.vy;
-      this.twinkle += 0.02;
-      if (this.x < -10 || this.x > W + 10 || this.y < -10 || this.y > H + 10) {
-        this.reset();
-        // re-enter from an edge
-        if (Math.random() > 0.5) { this.x = Math.random() > 0.5 ? -5 : W + 5; this.y = Math.random() * H; }
-        else { this.y = Math.random() > 0.5 ? -5 : H + 5; this.x = Math.random() * W; }
+      this.rot += this.rotSpeed;
+
+      // Wrap around edges
+      if (this.x < -60) this.x = W + 60;
+      if (this.x > W + 60) this.x = -60;
+      if (this.y < -60) this.y = H + 60;
+      if (this.y > H + 60) this.y = -60;
+
+      // Mouse proximity: glow brighter
+      const dx = this.x - mx;
+      const dy = this.y - my;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d < 250) {
+        this.alpha = this.baseAlpha + (1 - d / 250) * 0.25;
+      } else {
+        this.alpha += (this.baseAlpha - this.alpha) * 0.05;
       }
     }
+
     draw() {
-      const alpha = 0.6 + 0.4 * Math.sin(this.twinkle);
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${this.c[0]},${this.c[1]},${this.c[2]},${alpha})`;
-      ctx.shadowBlur = 12;
-      ctx.shadowColor = `rgba(${this.c[0]},${this.c[1]},${this.c[2]},0.8)`;
-      ctx.fill();
-      ctx.shadowBlur = 0;
+      cx.save();
+      cx.translate(this.x, this.y);
+      cx.rotate(this.rot);
+
+      cx.beginPath();
+      for (let i = 0; i <= this.sides; i++) {
+        const angle = (i / this.sides) * Math.PI * 2;
+        const px = Math.cos(angle) * this.size;
+        const py = Math.sin(angle) * this.size;
+        if (i === 0) cx.moveTo(px, py);
+        else cx.lineTo(px, py);
+      }
+      cx.closePath();
+
+      const col = this.isRed ? C.red : C.gray;
+      cx.strokeStyle = col;
+      cx.globalAlpha = this.alpha;
+      cx.lineWidth = 1;
+      cx.stroke();
+
+      // Inner shape (smaller, faint)
+      cx.beginPath();
+      for (let i = 0; i <= this.sides; i++) {
+        const angle = (i / this.sides) * Math.PI * 2 + Math.PI / this.sides;
+        const px = Math.cos(angle) * this.size * 0.5;
+        const py = Math.sin(angle) * this.size * 0.5;
+        if (i === 0) cx.moveTo(px, py);
+        else cx.lineTo(px, py);
+      }
+      cx.closePath();
+      cx.globalAlpha = this.alpha * 0.4;
+      cx.stroke();
+
+      cx.restore();
+      cx.globalAlpha = 1;
     }
   }
 
-  for (let i = 0; i < STAR_COUNT; i++) stars.push(new Star());
+  // ─── Floating Dots (subtle) ───
+  class Dot {
+    constructor() {
+      this.x = Math.random() * W;
+      this.y = Math.random() * H;
+      this.r = Math.random() * 1.5 + 0.5;
+      this.phase = Math.random() * Math.PI * 2;
+      this.speed = Math.random() * 0.015 + 0.005;
+      this.isRed = Math.random() < 0.15;
+    }
 
-  // Mouse interaction
-  let mx = -1000, my = -1000;
-  addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    update() {
+      this.phase += this.speed;
+    }
 
-  function loop() {
-    ctx.fillStyle = 'rgba(10, 10, 15, 0.15)';
-    ctx.fillRect(0, 0, W, H);
+    draw() {
+      const a = 0.15 + 0.2 * Math.sin(this.phase);
+      cx.beginPath();
+      cx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      cx.fillStyle = this.isRed
+        ? `rgba(239, 35, 60, ${a})`
+        : `rgba(141, 153, 174, ${a})`;
+      cx.fill();
+    }
+  }
 
-    // Draw connecting lines
-    for (let i = 0; i < stars.length; i++) {
-      stars[i].update();
-      stars[i].draw();
-      for (let j = i + 1; j < stars.length; j++) {
-        const dx = stars[i].x - stars[j].x;
-        const dy = stars[i].y - stars[j].y;
+  // ─── Horizontal flowing lines ───
+  class FlowLine {
+    constructor(y) {
+      this.y = y;
+      this.points = [];
+      const segs = 40;
+      for (let i = 0; i <= segs; i++) {
+        this.points.push({
+          x: (i / segs) * W,
+          baseY: y,
+          offset: Math.random() * Math.PI * 2,
+          amp: Math.random() * 8 + 3,
+          freq: Math.random() * 0.003 + 0.001
+        });
+      }
+      this.isRed = Math.random() < 0.25;
+    }
+
+    draw(time) {
+      cx.beginPath();
+      for (let i = 0; i < this.points.length; i++) {
+        const p = this.points[i];
+        const yy = p.baseY + Math.sin(time * p.freq + p.offset) * p.amp;
+
+        // Mouse ripple
+        const dx = p.x - mx;
+        const dy = p.baseY - my;
         const d = Math.sqrt(dx * dx + dy * dy);
-        if (d < LINK_DIST) {
-          const alpha = (1 - d / LINK_DIST) * 0.18;
-          ctx.beginPath();
-          ctx.strokeStyle = `rgba(255, 140, 60, ${alpha})`;
-          ctx.lineWidth = 0.6;
-          ctx.moveTo(stars[i].x, stars[i].y);
-          ctx.lineTo(stars[j].x, stars[j].y);
-          ctx.stroke();
-        }
+        const ripple = d < 200 ? Math.sin((1 - d / 200) * Math.PI) * 15 : 0;
+
+        if (i === 0) cx.moveTo(p.x, yy + ripple);
+        else cx.lineTo(p.x, yy + ripple);
       }
-      // Mouse proximity glow line
-      const mdx = stars[i].x - mx;
-      const mdy = stars[i].y - my;
-      const md = Math.sqrt(mdx * mdx + mdy * mdy);
-      if (md < 200) {
-        const alpha = (1 - md / 200) * 0.35;
-        ctx.beginPath();
-        ctx.strokeStyle = `rgba(255, 107, 53, ${alpha})`;
-        ctx.lineWidth = 0.8;
-        ctx.moveTo(stars[i].x, stars[i].y);
-        ctx.lineTo(mx, my);
-        ctx.stroke();
-      }
+
+      cx.strokeStyle = this.isRed
+        ? 'rgba(239, 35, 60, 0.06)'
+        : 'rgba(141, 153, 174, 0.05)';
+      cx.lineWidth = 1;
+      cx.stroke();
     }
-    requestAnimationFrame(loop);
   }
 
-  // Clear once at start to avoid trail on load
-  ctx.fillStyle = '#0a0a0f';
-  ctx.fillRect(0, 0, W, H);
-  loop();
+  // Init
+  const shapes = [];
+  for (let i = 0; i < 18; i++) shapes.push(new Shape());
 
-  // ════════════════════════════════════════════
-  //  CUSTOM CURSOR
-  // ════════════════════════════════════════════
-  const dot = document.getElementById('cursorDot');
-  const ring = document.getElementById('cursorRing');
-  let ringX = 0, ringY = 0, dotX = 0, dotY = 0;
+  const dots = [];
+  for (let i = 0; i < 100; i++) dots.push(new Dot());
+
+  const flowLines = [];
+  for (let y = 0; y < H; y += 25) flowLines.push(new FlowLine(y));
+
+  let time = 0;
+
+  function render() {
+    time++;
+
+    // Fade trail
+    cx.fillStyle = 'rgba(43, 45, 66, 0.12)';
+    cx.fillRect(0, 0, W, H);
+
+    // Flow lines
+    for (const fl of flowLines) fl.draw(time);
+
+    // Dots
+    for (const d of dots) { d.update(); d.draw(); }
+
+    // Shapes
+    for (const s of shapes) { s.update(); s.draw(); }
+
+    // Mouse glow
+    if (mx > 0) {
+      const grad = cx.createRadialGradient(mx, my, 0, mx, my, 180);
+      grad.addColorStop(0, 'rgba(239, 35, 60, 0.04)');
+      grad.addColorStop(1, 'rgba(239, 35, 60, 0)');
+      cx.fillStyle = grad;
+      cx.fillRect(mx - 180, my - 180, 360, 360);
+    }
+
+    requestAnimationFrame(render);
+  }
+
+  // Initial clear
+  cx.fillStyle = C.dark;
+  cx.fillRect(0, 0, W, H);
+  render();
+
+  // ═══ CURSOR ═══
+  const dot = document.getElementById('cDot');
+  const ring = document.getElementById('cRing');
+  let rx = 0, ry = 0;
 
   document.addEventListener('mousemove', e => {
-    dotX = e.clientX;
-    dotY = e.clientY;
-    dot.style.left = dotX - 3 + 'px';
-    dot.style.top = dotY - 3 + 'px';
+    dot.style.left = e.clientX - 3 + 'px';
+    dot.style.top = e.clientY - 3 + 'px';
   });
 
-  // Smooth ring follow
-  function animateRing() {
-    ringX += (dotX - ringX) * 0.12;
-    ringY += (dotY - ringY) * 0.12;
-    ring.style.left = ringX - 18 + 'px';
-    ring.style.top = ringY - 18 + 'px';
-    requestAnimationFrame(animateRing);
-  }
-  animateRing();
+  (function moveRing() {
+    rx += (mx - rx) * 0.1;
+    ry += (my - ry) * 0.1;
+    ring.style.left = rx - 18 + 'px';
+    ring.style.top = ry - 18 + 'px';
+    requestAnimationFrame(moveRing);
+  })();
 
-  // Hover effects
   const ctaBtn = document.getElementById('ctaBtn');
   ctaBtn.addEventListener('mouseenter', () => {
     ring.style.width = '70px';
     ring.style.height = '70px';
-    ring.style.borderColor = '#ffa94d';
-    ring.style.background = 'rgba(255, 107, 53, 0.06)';
-    ring.style.left = dotX - 35 + 'px';
-    ring.style.top = dotY - 35 + 'px';
+    ring.style.borderColor = '#ef233c';
+    ring.style.background = 'rgba(239, 35, 60, 0.06)';
   });
   ctaBtn.addEventListener('mouseleave', () => {
     ring.style.width = '36px';
     ring.style.height = '36px';
-    ring.style.borderColor = 'rgba(255, 107, 53, 0.6)';
+    ring.style.borderColor = 'rgba(239, 35, 60, 0.4)';
     ring.style.background = 'transparent';
   });
   </script>
