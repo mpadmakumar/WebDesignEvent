@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Workspace | Web Design Competition</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css">`n  <script src="js/loader.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
 </head>
@@ -13,11 +13,11 @@
 
   <!-- Header -->
   <header class="header">
-    <div class="brand">🎨 DesignArena</div>
+    <div class="brand">ðŸŽ¨ DesignArena</div>
     <div class="header-actions">
-      <span style="font-size:.82rem;color:var(--text-secondary)">👤 Lot: <span id="lot-display"></span></span>
+      <span style="font-size:.82rem;color:var(--text-secondary)">ðŸ‘¤ Lot: <span id="lot-display"></span></span>
       <div class="theme-toggle" onclick="UserApp.toggleTheme()"></div>
-      <button class="btn btn-sm btn-secondary" onclick="UserApp.toggleFullscreen()">⛶</button>
+      <button class="btn btn-sm btn-secondary" onclick="UserApp.toggleFullscreen()">â›¶</button>
       <button class="btn btn-danger btn-sm" onclick="Auth.logoutParticipant(); window.location.href='login.html'">Logout</button>
     </div>
   </header>
@@ -32,9 +32,9 @@
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:8px">
-      <div id="timer" class="timer">⏱ 00:00</div>
-      <button id="btn-submit" class="btn btn-primary btn-sm" onclick="UserApp.submitChallenge()">📤 Submit</button>
-      <button id="btn-next" class="btn btn-success btn-sm" onclick="UserApp.nextChallenge()" disabled>Next ▶</button>
+      <div id="timer" class="timer">â± 00:00</div>
+      <button id="btn-submit" class="btn btn-primary btn-sm" onclick="UserApp.submitChallenge()">ðŸ“¤ Submit</button>
+      <button id="btn-next" class="btn btn-success btn-sm" onclick="UserApp.nextChallenge()" disabled>Next â–¶</button>
     </div>
   </div>
 
@@ -69,7 +69,7 @@
       <!-- List View -->
       <div id="rounds-list-view" style="display:flex; flex-direction: column; height: 100%;">
         <div style="padding: 12px 16px; border-bottom: 1px solid var(--border); background: rgba(10,10,20,0.5);">
-           <h3 style="font-size: .95rem; color: var(--primary-light);">📌 Design Rounds</h3>
+           <h3 style="font-size: .95rem; color: var(--primary-light);">ðŸ“Œ Design Rounds</h3>
         </div>
         <div id="pushed-rounds-list" style="padding: 12px; overflow-y: auto; flex: 1;">
            <p style="color:var(--text-muted);font-size:.85rem;text-align:center;">Waiting for Admin...</p>
@@ -80,7 +80,7 @@
       <div id="round-detail-view" class="hidden" style="position: absolute; inset: 0; background: var(--bg); display: flex; flex-direction: column; z-index: 10;">
         <div style="padding: 12px 16px; border-bottom: 1px solid var(--border); background: rgba(10,10,20,0.5); display: flex; justify-content: space-between; align-items: center;">
            <h3 id="detail-round-title" style="font-size: .95rem; color: var(--primary-light); margin: 0;">Round Details</h3>
-           <button class="btn btn-sm btn-secondary" onclick="UserApp.closeRoundDetail()" style="padding: 4px 8px; font-size: .75rem;">❌ Back</button>
+           <button class="btn btn-sm btn-secondary" onclick="UserApp.closeRoundDetail()" style="padding: 4px 8px; font-size: .75rem;">âŒ Back</button>
         </div>
         <div id="pushed-design-banner" style="flex: 1; padding: 12px; overflow-y: auto; display:flex; flex-direction:column; align-items:center;">
         </div>
@@ -96,9 +96,9 @@
             <button id="tab-css" class="tab-btn" onclick="UserApp.switchTab('css')">style.css</button>
             <button id="tab-js" class="tab-btn" onclick="UserApp.switchTab('js')">script.js</button>
             <div style="flex:1; min-width:10px;"></div>
-            <button class="btn btn-sm btn-secondary" onclick="UserApp.injectFramework('tailwind')" style="margin: 4px 2px; padding:3px 8px; font-size:.72rem; background:rgba(56, 189, 248, 0.1); color:#38bdf8; border-color:rgba(56,189,248,0.3);" title="Add Tailwind CSS CDN">⚡ Tailwind</button>
-            <button class="btn btn-sm btn-secondary" onclick="UserApp.injectFramework('bootstrap')" style="margin: 4px 2px; padding:3px 8px; font-size:.72rem; background:rgba(113, 44, 249, 0.1); color:#b197fc; border-color:rgba(113,44,249,0.3);" title="Add Bootstrap 5 CDN">🅱️ Bootstrap</button>
-            <button class="btn btn-sm btn-secondary" onclick="UserApp.updatePreview()" style="margin: 4px 8px 4px 4px; padding:3px 10px; font-size:.72rem">▶ Run</button>
+            <button class="btn btn-sm btn-secondary" onclick="UserApp.injectFramework('tailwind')" style="margin: 4px 2px; padding:3px 8px; font-size:.72rem; background:rgba(56, 189, 248, 0.1); color:#38bdf8; border-color:rgba(56,189,248,0.3);" title="Add Tailwind CSS CDN">âš¡ Tailwind</button>
+            <button class="btn btn-sm btn-secondary" onclick="UserApp.injectFramework('bootstrap')" style="margin: 4px 2px; padding:3px 8px; font-size:.72rem; background:rgba(113, 44, 249, 0.1); color:#b197fc; border-color:rgba(113,44,249,0.3);" title="Add Bootstrap 5 CDN">ðŸ…±ï¸ Bootstrap</button>
+            <button class="btn btn-sm btn-secondary" onclick="UserApp.updatePreview()" style="margin: 4px 8px 4px 4px; padding:3px 10px; font-size:.72rem">â–¶ Run</button>
          </div>
          <div style="flex: 1; position: relative;">
             <textarea id="editor-html" class="code-editor full-editor" oninput="UserApp.updatePreview()" spellcheck="false" placeholder="<!-- HTML here -->"></textarea>
@@ -110,7 +110,7 @@
       <!-- Live Preview: 50% of the Right Panel -->
       <div id="preview-panel" class="preview-panel" style="width: 50%; display: flex; flex-direction: column; padding: 8px 16px;">
         <div style="padding:6px 0;font-size:.82rem;font-weight:600;color:var(--text-secondary);display:flex;justify-content:space-between">
-          <span>👁️ Live Preview</span>
+          <span>ðŸ‘ï¸ Live Preview</span>
           <span style="font-size:.7rem;color:var(--text-muted)">Auto-saves every 5s</span>
         </div>
         <iframe id="preview-frame" class="preview-frame" style="flex:1" sandbox="allow-scripts"></iframe>
@@ -128,3 +128,4 @@
   </script>
 </body>
 </html>
+
