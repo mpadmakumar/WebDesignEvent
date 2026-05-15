@@ -79,7 +79,6 @@
       line-height: 0.88;
       color: #edf2f4;
       text-shadow: 0 0 40px rgba(239, 35, 60, 0.25);
-      position: relative;
     }
     .t1::after {
       content: '';
@@ -189,141 +188,167 @@
   window.addEventListener('resize', resize);
   resize();
 
-  // ═══════════════════════════════════════════════════
-  //  WEB DESIGN THEMED BACKGROUND
-  //  Floating code tags, brackets, layout wireframes
-  //  NO mouse interaction - runs independently
-  // ═══════════════════════════════════════════════════
+  // ═══════════════════════════════════════
+  //  PURE VISUAL DESIGN ANIMATION
+  //  No text — only shapes, lines, colors
+  //  Perfect for Web Design Event
+  // ═══════════════════════════════════════
 
-  // ─── Floating Code Tags ───
-  const tags = [
-    '<html>', '</html>', '<head>', '<body>', '</body>',
-    '<div>', '</div>', '<style>', '</style>', '<script>',
-    '<h1>', '<p>', '<a>', '<img>', '<nav>',
-    '<section>', '<footer>', '<header>', '<main>',
-    'class=""', 'id=""', 'display: flex;', 'color:', 
-    'margin:', 'padding:', '@media', 'position:',
-    'font-size:', 'border:', 'background:', 'z-index:',
-    '{ }', '/* */', '( )', '=> { }', 'const', 'function',
-    'width:', 'height:', 'grid', 'flexbox', 'responsive',
-    'CSS', 'HTML', 'JS', '< />'
-  ];
-
-  class FloatingTag {
-    constructor() {
-      this.text = tags[Math.floor(Math.random() * tags.length)];
-      this.x = Math.random() * W;
-      this.y = H + 30 + Math.random() * H; // Start below screen
-      this.speed = Math.random() * 0.5 + 0.2;
-      this.alpha = Math.random() * 0.2 + 0.25;
-      this.size = Math.random() * 8 + 13;
-      this.isRed = Math.random() < 0.2;
-      this.drift = (Math.random() - 0.5) * 0.3;
-    }
-
-    update() {
-      this.y -= this.speed;
-      this.x += this.drift;
-      if (this.y < -40) {
-        this.y = H + 30;
-        this.x = Math.random() * W;
-        this.text = tags[Math.floor(Math.random() * tags.length)];
-      }
-    }
-
-    draw() {
-      ctx.font = `bold ${this.size}px "Rajdhani", monospace`;
-      ctx.fillStyle = this.isRed
-        ? `rgba(239, 35, 60, ${this.alpha})`
-        : `rgba(200, 210, 225, ${this.alpha})`;
-      ctx.fillText(this.text, this.x, this.y);
-    }
-  }
-
-  // ─── Wireframe Layout Boxes ───
-  class WireframeBox {
+  // ─── Floating Layout Blocks ───
+  class LayoutBlock {
     constructor() {
       this.x = Math.random() * W;
       this.y = H + 50 + Math.random() * H;
-      this.w = Math.random() * 140 + 60;
-      this.h = Math.random() * 80 + 35;
-      this.speed = Math.random() * 0.35 + 0.12;
-      this.alpha = Math.random() * 0.12 + 0.14;
+      this.w = Math.random() * 120 + 40;
+      this.h = Math.random() * 80 + 30;
+      this.speed = Math.random() * 0.35 + 0.15;
+      this.alpha = Math.random() * 0.12 + 0.1;
+      this.rot = (Math.random() - 0.5) * 0.15;
+      this.rotSpeed = (Math.random() - 0.5) * 0.0005;
       this.isRed = Math.random() < 0.25;
-      this.hasHeader = Math.random() > 0.4;
-      this.hasSidebar = Math.random() > 0.6;
+      this.style = Math.floor(Math.random() * 4); // 0-3 different layouts
     }
 
     update() {
       this.y -= this.speed;
-      if (this.y < -80) {
+      this.rot += this.rotSpeed;
+      if (this.y < -120) {
         this.y = H + 50;
         this.x = Math.random() * W;
       }
     }
 
     draw() {
-      const col = this.isRed
-        ? `rgba(239, 35, 60, ${this.alpha})`
-        : `rgba(141, 153, 174, ${this.alpha})`;
-      
+      ctx.save();
+      ctx.translate(this.x + this.w / 2, this.y + this.h / 2);
+      ctx.rotate(this.rot);
+      ctx.translate(-this.w / 2, -this.h / 2);
+
+      const col = this.isRed ? `rgba(239,35,60,${this.alpha})` : `rgba(141,153,174,${this.alpha})`;
       ctx.strokeStyle = col;
+      ctx.fillStyle = col;
       ctx.lineWidth = 1.2;
 
-      // Main box
-      ctx.strokeRect(this.x, this.y, this.w, this.h);
+      // Outer frame
+      ctx.strokeRect(0, 0, this.w, this.h);
 
-      // Header bar
-      if (this.hasHeader) {
-        ctx.strokeRect(this.x, this.y, this.w, this.h * 0.2);
-        // 3 dots in header (like browser)
-        const dotY = this.y + this.h * 0.1;
+      if (this.style === 0) {
+        // Browser window: header bar + 3 dots + content area
+        ctx.fillRect(0, 0, this.w, 8);
+        ctx.globalAlpha = this.alpha * 1.5;
         for (let i = 0; i < 3; i++) {
           ctx.beginPath();
-          ctx.arc(this.x + 6 + i * 7, dotY, 1.5, 0, Math.PI * 2);
-          ctx.fillStyle = col;
+          ctx.arc(5 + i * 6, 4, 1.5, 0, Math.PI * 2);
           ctx.fill();
         }
+        ctx.globalAlpha = 1;
+        // Content blocks
+        ctx.fillRect(5, 14, this.w * 0.6, 3);
+        ctx.fillRect(5, 21, this.w * 0.4, 3);
+        ctx.fillRect(5, 28, this.w * 0.7, 3);
+      }
+      else if (this.style === 1) {
+        // Two-column layout
+        const midX = this.w * 0.35;
+        ctx.beginPath();
+        ctx.moveTo(midX, 0);
+        ctx.lineTo(midX, this.h);
+        ctx.stroke();
+        // Left side blocks
+        ctx.fillRect(4, 5, midX - 8, 6);
+        ctx.fillRect(4, 15, midX - 12, 6);
+        // Right side blocks
+        ctx.fillRect(midX + 4, 5, this.w - midX - 8, this.h - 10);
+      }
+      else if (this.style === 2) {
+        // Card grid layout
+        const cardW = (this.w - 12) / 3;
+        const cardH = this.h - 10;
+        for (let i = 0; i < 3; i++) {
+          ctx.strokeRect(3 + i * (cardW + 3), 5, cardW, cardH);
+          ctx.fillRect(3 + i * (cardW + 3) + 3, 8, cardW - 6, cardH * 0.4);
+        }
+      }
+      else {
+        // Hero section layout
+        ctx.fillRect(this.w * 0.2, this.h * 0.15, this.w * 0.6, 4);
+        ctx.fillRect(this.w * 0.3, this.h * 0.35, this.w * 0.4, 3);
+        ctx.strokeRect(this.w * 0.35, this.h * 0.55, this.w * 0.3, this.h * 0.2);
       }
 
-      // Sidebar
-      if (this.hasSidebar) {
-        const sideW = this.w * 0.3;
-        const startY = this.hasHeader ? this.y + this.h * 0.2 : this.y;
-        const sideH = this.hasHeader ? this.h * 0.8 : this.h;
-        ctx.strokeRect(this.x, startY, sideW, sideH);
-      }
-
-      // Content lines
-      const contentX = this.hasSidebar ? this.x + this.w * 0.35 : this.x + 5;
-      const contentW = this.hasSidebar ? this.w * 0.55 : this.w - 10;
-      const startContentY = this.hasHeader ? this.y + this.h * 0.3 : this.y + 5;
-      
-      ctx.fillStyle = col;
-      for (let i = 0; i < 3; i++) {
-        const lw = contentW * (0.5 + Math.random() * 0.4);
-        ctx.fillRect(contentX, startContentY + i * 8, lw, 2);
-      }
+      ctx.restore();
     }
   }
 
-  // ─── Bracket Pairs { } < > ───
-  class FloatingBracket {
+  // ─── Color Palette Swatches ───
+  class ColorSwatch {
     constructor() {
       this.x = Math.random() * W;
       this.y = H + 20 + Math.random() * H;
-      this.speed = Math.random() * 0.3 + 0.12;
-      this.alpha = Math.random() * 0.15 + 0.18;
-      this.size = Math.random() * 35 + 25;
-      this.type = Math.floor(Math.random() * 3); // 0: { }, 1: < >, 2: ( )
-      this.rot = Math.random() * 0.4 - 0.2;
-      this.rotSpeed = (Math.random() - 0.5) * 0.002;
-      this.isRed = Math.random() < 0.15;
+      this.speed = Math.random() * 0.25 + 0.1;
+      this.size = Math.random() * 14 + 8;
+      this.alpha = Math.random() * 0.2 + 0.15;
+      this.colors = this.pickPalette();
+      this.gap = 2;
+    }
+
+    pickPalette() {
+      const palettes = [
+        ['#ef233c', '#8d99ae', '#edf2f4', '#2b2d42'],
+        ['#ef233c', '#d90429', '#8d99ae', '#edf2f4'],
+        ['#2b2d42', '#3a3d5c', '#8d99ae', '#edf2f4'],
+        ['#ef233c', '#ff6b6b', '#ffa07a', '#edf2f4'],
+      ];
+      return palettes[Math.floor(Math.random() * palettes.length)];
     }
 
     update() {
       this.y -= this.speed;
-      this.rot += this.rotSpeed;
+      if (this.y < -40) {
+        this.y = H + 20;
+        this.x = Math.random() * W;
+        this.colors = this.pickPalette();
+      }
+    }
+
+    draw() {
+      ctx.globalAlpha = this.alpha;
+      for (let i = 0; i < this.colors.length; i++) {
+        ctx.fillStyle = this.colors[i];
+        ctx.fillRect(
+          this.x + i * (this.size + this.gap),
+          this.y,
+          this.size,
+          this.size
+        );
+      }
+      // Outline
+      ctx.strokeStyle = `rgba(237,242,244,${this.alpha * 0.5})`;
+      ctx.lineWidth = 0.8;
+      ctx.strokeRect(
+        this.x - 1,
+        this.y - 1,
+        this.colors.length * (this.size + this.gap) - this.gap + 2,
+        this.size + 2
+      );
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  // ─── Design Circles / Dots ───
+  class DesignCircle {
+    constructor() {
+      this.x = Math.random() * W;
+      this.y = H + 20 + Math.random() * H;
+      this.r = Math.random() * 25 + 10;
+      this.speed = Math.random() * 0.3 + 0.1;
+      this.alpha = Math.random() * 0.1 + 0.08;
+      this.isRed = Math.random() < 0.2;
+      this.isDashed = Math.random() > 0.5;
+    }
+
+    update() {
+      this.y -= this.speed;
       if (this.y < -50) {
         this.y = H + 20;
         this.x = Math.random() * W;
@@ -331,100 +356,97 @@
     }
 
     draw() {
-      ctx.save();
-      ctx.translate(this.x, this.y);
-      ctx.rotate(this.rot);
-
-      const col = this.isRed
-        ? `rgba(239, 35, 60, ${this.alpha})`
-        : `rgba(141, 153, 174, ${this.alpha})`;
+      const col = this.isRed ? `rgba(239,35,60,${this.alpha})` : `rgba(141,153,174,${this.alpha})`;
       ctx.strokeStyle = col;
-      ctx.lineWidth = 1.5;
+      ctx.lineWidth = 1.2;
 
-      const s = this.size;
-
-      if (this.type === 0) {
-        // Curly braces { }
-        ctx.beginPath();
-        ctx.moveTo(-s, -s * 0.6);
-        ctx.quadraticCurveTo(-s * 0.3, -s * 0.3, -s * 0.5, 0);
-        ctx.quadraticCurveTo(-s * 0.3, s * 0.3, -s, s * 0.6);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(s, -s * 0.6);
-        ctx.quadraticCurveTo(s * 0.3, -s * 0.3, s * 0.5, 0);
-        ctx.quadraticCurveTo(s * 0.3, s * 0.3, s, s * 0.6);
-        ctx.stroke();
-      } else if (this.type === 1) {
-        // Angle brackets < >
-        ctx.beginPath();
-        ctx.moveTo(-s * 0.3, -s * 0.5);
-        ctx.lineTo(-s * 0.8, 0);
-        ctx.lineTo(-s * 0.3, s * 0.5);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(s * 0.3, -s * 0.5);
-        ctx.lineTo(s * 0.8, 0);
-        ctx.lineTo(s * 0.3, s * 0.5);
-        ctx.stroke();
-
-        // Slash in center
-        ctx.beginPath();
-        ctx.moveTo(s * 0.1, -s * 0.35);
-        ctx.lineTo(-s * 0.1, s * 0.35);
-        ctx.stroke();
-      } else {
-        // Parentheses ( )
-        ctx.beginPath();
-        ctx.arc(-s * 0.3, 0, s * 0.5, -Math.PI * 0.4, Math.PI * 0.4);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.arc(s * 0.3, 0, s * 0.5, Math.PI - Math.PI * 0.4, Math.PI + Math.PI * 0.4);
-        ctx.stroke();
+      if (this.isDashed) {
+        ctx.setLineDash([4, 4]);
       }
 
-      ctx.restore();
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Inner dot
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+      ctx.fillStyle = col;
+      ctx.fill();
+
+      // Crosshair lines
+      ctx.beginPath();
+      ctx.moveTo(this.x - this.r * 0.4, this.y);
+      ctx.lineTo(this.x + this.r * 0.4, this.y);
+      ctx.moveTo(this.x, this.y - this.r * 0.4);
+      ctx.lineTo(this.x, this.y + this.r * 0.4);
+      ctx.stroke();
+
+      ctx.setLineDash([]);
     }
   }
 
-  // ─── Initialize ───
-  const floatingTags = [];
-  for (let i = 0; i < 65; i++) {
-    const t = new FloatingTag();
-    t.y = Math.random() * H;
-    floatingTags.push(t);
+  // ─── Flowing Bezier Curves ───
+  class FlowCurve {
+    constructor() {
+      this.reset();
+    }
+
+    reset() {
+      this.y1 = H + Math.random() * 200;
+      this.x1 = Math.random() * W * 0.3;
+      this.x2 = W * 0.3 + Math.random() * W * 0.4;
+      this.x3 = W * 0.6 + Math.random() * W * 0.4;
+      this.cpOffset = Math.random() * 100 + 30;
+      this.speed = Math.random() * 0.4 + 0.15;
+      this.alpha = Math.random() * 0.1 + 0.08;
+      this.isRed = Math.random() < 0.2;
+    }
+
+    update() {
+      this.y1 -= this.speed;
+      if (this.y1 < -200) this.reset();
+    }
+
+    draw() {
+      const col = this.isRed ? `rgba(239,35,60,${this.alpha})` : `rgba(141,153,174,${this.alpha})`;
+      ctx.strokeStyle = col;
+      ctx.lineWidth = 1.5;
+
+      ctx.beginPath();
+      ctx.moveTo(this.x1, this.y1);
+      ctx.bezierCurveTo(
+        this.x2, this.y1 - this.cpOffset,
+        this.x2, this.y1 + this.cpOffset,
+        this.x3, this.y1
+      );
+      ctx.stroke();
+    }
   }
 
-  const wireframes = [];
-  for (let i = 0; i < 18; i++) {
-    const w = new WireframeBox();
-    w.y = Math.random() * H;
-    wireframes.push(w);
-  }
+  // ─── Init ───
+  const blocks = [];
+  for (let i = 0; i < 16; i++) { const b = new LayoutBlock(); b.y = Math.random() * H; blocks.push(b); }
 
-  const brackets = [];
-  for (let i = 0; i < 20; i++) {
-    const b = new FloatingBracket();
-    b.y = Math.random() * H;
-    brackets.push(b);
-  }
+  const swatches = [];
+  for (let i = 0; i < 10; i++) { const s = new ColorSwatch(); s.y = Math.random() * H; swatches.push(s); }
+
+  const circles = [];
+  for (let i = 0; i < 14; i++) { const c = new DesignCircle(); c.y = Math.random() * H; circles.push(c); }
+
+  const curves = [];
+  for (let i = 0; i < 8; i++) { const c = new FlowCurve(); c.y1 = Math.random() * H; curves.push(c); }
 
   // ─── Render ───
   function render() {
     ctx.fillStyle = '#2b2d42';
     ctx.fillRect(0, 0, W, H);
 
-    // Draw wireframe boxes first (furthest back)
-    for (const w of wireframes) { w.update(); w.draw(); }
-
-    // Draw brackets
-    for (const b of brackets) { b.update(); b.draw(); }
-
-    // Draw floating tags (front)
-    for (const t of floatingTags) { t.update(); t.draw(); }
+    // Draw layers back to front
+    for (const c of curves) { c.update(); c.draw(); }
+    for (const c of circles) { c.update(); c.draw(); }
+    for (const b of blocks) { b.update(); b.draw(); }
+    for (const s of swatches) { s.update(); s.draw(); }
 
     requestAnimationFrame(render);
   }
