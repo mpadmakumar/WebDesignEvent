@@ -28,7 +28,7 @@
     }
 
     /* Canvas Background */
-    #particle-canvas {
+    #particles-js {
       position: absolute;
       top: 0;
       left: 0;
@@ -145,7 +145,7 @@
 <body>
 
   <!-- Particle Background -->
-  <canvas id="particle-canvas"></canvas>
+  <div id="particles-js"></div>
 
   <div class="content-wrapper">
     
@@ -173,97 +173,61 @@
     © 2026 Ayya Nadar Janaki Ammal College. Dept. of Computer Applications. All rights reserved.
   </div>
 
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <script>
-    // Particle Network Animation
-    const canvas = document.getElementById('particle-canvas');
-    const ctx = canvas.getContext('2d');
-    let width, height;
-    let particles = [];
-
-    function resize() {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    }
-
-    window.addEventListener('resize', resize);
-    resize();
-
-    class Particle {
-      constructor() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.5;
-        this.vy = (Math.random() - 0.5) * 0.5;
-        this.radius = Math.random() * 2 + 1; // Slightly larger particles
-        
-        // Multi-color dots to match the exact image (Orange, Yellow, Purple)
-        const colors = [
-          { r: 255, g: 140, b: 0 },   // Orange
-          { r: 255, g: 215, b: 0 },   // Yellow
-          { r: 138, g: 43,  b: 226 }  // Purple
-        ];
-        this.baseColor = colors[Math.floor(Math.random() * colors.length)];
-        this.colorStr = \`rgba(\${this.baseColor.r}, \${this.baseColor.g}, \${this.baseColor.b}, 0.9)\`;
-      }
-
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-
-        if (this.x < 0 || this.x > width) this.vx = -this.vx;
-        if (this.y < 0 || this.y > height) this.vy = -this.vy;
-      }
-
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = this.colorStr;
-        ctx.fill();
-        
-        // Soft glowing aura around particle
-        ctx.shadowBlur = 15;
-        ctx.shadowColor = this.colorStr;
-      }
-    }
-
-    function initParticles() {
-      particles = [];
-      const numParticles = Math.floor((width * height) / 10000); 
-      for (let i = 0; i < numParticles; i++) {
-        particles.push(new Particle());
-      }
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, width, height);
-      
-      for (let i = 0; i < particles.length; i++) {
-        particles[i].update();
-        particles[i].draw();
-        ctx.shadowBlur = 0; // reset shadow before drawing lines
-
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          // Connect nearby particles to form constellations
-          if (distance < 140) {
-            ctx.beginPath();
-            // Extremely faint yellowish/orange lines to match the image
-            ctx.strokeStyle = \`rgba(255, 180, 50, \${0.15 - distance/933})\`;
-            ctx.lineWidth = 0.5;
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.stroke();
-          }
+    particlesJS('particles-js', {
+      "particles": {
+        "number": {
+          "value": 60,
+          "density": { "enable": true, "value_area": 800 }
+        },
+        "color": {
+          "value": ["#00ffff", "#0088ff", "#0055ff"]
+        },
+        "shape": {
+          "type": "circle"
+        },
+        "opacity": {
+          "value": 0.8,
+          "random": true,
+          "anim": { "enable": true, "speed": 1, "opacity_min": 0.3, "sync": false }
+        },
+        "size": {
+          "value": 3,
+          "random": true,
+          "anim": { "enable": false }
+        },
+        "line_linked": {
+          "enable": true,
+          "distance": 150,
+          "color": "#00aaff",
+          "opacity": 0.2,
+          "width": 1
+        },
+        "move": {
+          "enable": true,
+          "speed": 1.5,
+          "direction": "none",
+          "random": true,
+          "straight": false,
+          "out_mode": "out",
+          "bounce": false
         }
-      }
-      requestAnimationFrame(animate);
-    }
-
-    initParticles();
-    animate();
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": { "enable": true, "mode": "grab" },
+          "onclick": { "enable": true, "mode": "push" },
+          "resize": true
+        },
+        "modes": {
+          "grab": { "distance": 180, "line_linked": { "opacity": 0.5 } },
+          "push": { "particles_nb": 3 }
+        }
+      },
+      "retina_detect": true
+    });
   </script>
 </body>
 </html>
