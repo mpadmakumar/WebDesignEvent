@@ -64,7 +64,7 @@ const Leaderboard = {
 
         el.innerHTML = `<div class="table-wrapper"><table>
             <thead><tr>
-                <th>Rank</th><th>Name</th><th>Lot #</th>
+                <th>Rank</th><th>Lot #</th>
                 <th>Completed</th><th>Raw Score</th>
                 <th>Penalty</th><th>Final Score</th><th>Time</th>
             </tr></thead>

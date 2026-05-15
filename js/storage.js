@@ -156,7 +156,9 @@ const Storage = {
     // Challenges
     getChallenges() { return (this.get(StorageKeys.CHALLENGES) || []).sort((a, b) => a.order - b.order); },
     getActiveChallenges() { return this.getChallenges().filter(c => c.active); },
-    getChallengeById(id) { return this.getChallenges().find(c => c.id === id); },
+    getChallengeById(id) { 
+        return this.getChallenges().find(c => c.id === id) || this.getPushedDesigns().find(d => d.id === id); 
+    },
     addChallenge(ch) {
         const all = this.getChallenges();
         ch.id = 'ch' + Date.now(); ch.createdAt = new Date().toISOString();
