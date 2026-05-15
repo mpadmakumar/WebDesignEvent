@@ -18,11 +18,9 @@
       align-items: center;
       justify-content: center;
       position: relative;
-      /* Custom arrow cursor using SVG data URI */
       cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M4 2 L4 24 L10 18 L16 26 L20 24 L14 16 L22 16 Z' fill='%23edf2f4' stroke='%232b2d42' stroke-width='1.5'/%3E%3C/svg%3E") 4 2, auto;
     }
 
-    /* ═══ CANVAS ═══ */
     canvas#bg {
       position: fixed;
       top: 0; left: 0;
@@ -30,7 +28,6 @@
       z-index: 0;
     }
 
-    /* ═══ CONTENT ═══ */
     .content {
       position: relative;
       z-index: 10;
@@ -44,7 +41,7 @@
     .hbox {
       padding: 20px 60px;
       position: relative;
-      background: rgba(43, 45, 66, 0.6);
+      background: rgba(43, 45, 66, 0.7);
       backdrop-filter: blur(12px);
       border-left: 3px solid #ef233c;
       border-right: 3px solid #ef233c;
@@ -182,7 +179,7 @@
 
   <script>
   const cv = document.getElementById('bg');
-  const c = cv.getContext('2d');
+  const ctx = cv.getContext('2d');
   let W, H;
 
   function resize() {
@@ -192,123 +189,242 @@
   window.addEventListener('resize', resize);
   resize();
 
-  let mx = W / 2, my = H / 2;
-  window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  // ═══════════════════════════════════════════════════
+  //  WEB DESIGN THEMED BACKGROUND
+  //  Floating code tags, brackets, layout wireframes
+  //  NO mouse interaction - runs independently
+  // ═══════════════════════════════════════════════════
 
-  // ═══════════════════════════════════════
-  //  WARP SPEED / HYPERSPACE STARFIELD
-  //  Stars fly outward from mouse position
-  // ═══════════════════════════════════════
-  const STAR_COUNT = 400;
-  const stars = [];
+  // ─── Floating Code Tags ───
+  const tags = [
+    '<html>', '</html>', '<head>', '<body>', '</body>',
+    '<div>', '</div>', '<style>', '</style>', '<script>',
+    '<h1>', '<p>', '<a>', '<img>', '<nav>',
+    '<section>', '<footer>', '<header>', '<main>',
+    'class=""', 'id=""', 'display: flex;', 'color:', 
+    'margin:', 'padding:', '@media', 'position:',
+    'font-size:', 'border:', 'background:', 'z-index:',
+    '{ }', '/* */', '( )', '=> { }', 'const', 'function',
+    'width:', 'height:', 'grid', 'flexbox', 'responsive',
+    'CSS', 'HTML', 'JS', '< />'
+  ];
 
-  class Star {
-    constructor() { this.reset(); }
-
-    reset() {
-      // Start from a random position around center
-      this.cx = (Math.random() - 0.5) * 2;
-      this.cy = (Math.random() - 0.5) * 2;
-      this.z = Math.random() * 3 + 0.5;
-      this.pz = this.z;
-      this.speed = Math.random() * 0.02 + 0.005;
-      // Color: mostly gray-white, some red
-      this.isRed = Math.random() < 0.12;
+  class FloatingTag {
+    constructor() {
+      this.text = tags[Math.floor(Math.random() * tags.length)];
+      this.x = Math.random() * W;
+      this.y = H + 30 + Math.random() * H; // Start below screen
+      this.speed = Math.random() * 0.4 + 0.15;
+      this.alpha = Math.random() * 0.12 + 0.03;
+      this.size = Math.random() * 6 + 10;
+      this.isRed = Math.random() < 0.15;
+      this.drift = (Math.random() - 0.5) * 0.2;
     }
 
     update() {
-      this.pz = this.z;
-      this.z -= this.speed;
-      if (this.z <= 0.01) this.reset();
+      this.y -= this.speed;
+      this.x += this.drift;
+      if (this.y < -40) {
+        this.y = H + 30;
+        this.x = Math.random() * W;
+        this.text = tags[Math.floor(Math.random() * tags.length)];
+      }
     }
 
     draw() {
-      // Project from 3D to 2D using mouse as vanishing point
-      const ox = mx;
-      const oy = my;
-
-      const sx = (this.cx / this.z) * 400 + ox;
-      const sy = (this.cy / this.z) * 400 + oy;
-      const px = (this.cx / this.pz) * 400 + ox;
-      const py = (this.cy / this.pz) * 400 + oy;
-
-      // Skip if off screen
-      if (sx < -50 || sx > W + 50 || sy < -50 || sy > H + 50) return;
-
-      const size = (1 - this.z / 3.5) * 2.5;
-      const alpha = (1 - this.z / 3.5) * 0.9;
-
-      if (alpha <= 0) return;
-
-      // Trail line
-      c.beginPath();
-      c.moveTo(px, py);
-      c.lineTo(sx, sy);
-      if (this.isRed) {
-        c.strokeStyle = `rgba(239, 35, 60, ${alpha * 0.6})`;
-      } else {
-        c.strokeStyle = `rgba(141, 153, 174, ${alpha * 0.5})`;
-      }
-      c.lineWidth = size * 0.5;
-      c.stroke();
-
-      // Star dot
-      c.beginPath();
-      c.arc(sx, sy, Math.max(size, 0.5), 0, Math.PI * 2);
-      if (this.isRed) {
-        c.fillStyle = `rgba(239, 35, 60, ${alpha})`;
-      } else {
-        c.fillStyle = `rgba(237, 242, 244, ${alpha})`;
-      }
-      c.fill();
+      ctx.font = `${this.size}px "Rajdhani", monospace`;
+      ctx.fillStyle = this.isRed
+        ? `rgba(239, 35, 60, ${this.alpha})`
+        : `rgba(141, 153, 174, ${this.alpha})`;
+      ctx.fillText(this.text, this.x, this.y);
     }
   }
 
-  for (let i = 0; i < STAR_COUNT; i++) stars.push(new Star());
-
-  // ═══ Subtle grid lines ═══
-  function drawGrid() {
-    c.strokeStyle = 'rgba(141, 153, 174, 0.04)';
-    c.lineWidth = 0.5;
-
-    // Vertical lines
-    for (let x = 0; x < W; x += 80) {
-      c.beginPath();
-      c.moveTo(x, 0);
-      c.lineTo(x, H);
-      c.stroke();
+  // ─── Wireframe Layout Boxes ───
+  class WireframeBox {
+    constructor() {
+      this.x = Math.random() * W;
+      this.y = H + 50 + Math.random() * H;
+      this.w = Math.random() * 100 + 40;
+      this.h = Math.random() * 60 + 25;
+      this.speed = Math.random() * 0.3 + 0.1;
+      this.alpha = Math.random() * 0.06 + 0.02;
+      this.isRed = Math.random() < 0.2;
+      this.hasHeader = Math.random() > 0.5;
+      this.hasSidebar = Math.random() > 0.6;
     }
-    // Horizontal lines
-    for (let y = 0; y < H; y += 80) {
-      c.beginPath();
-      c.moveTo(0, y);
-      c.lineTo(W, y);
-      c.stroke();
+
+    update() {
+      this.y -= this.speed;
+      if (this.y < -80) {
+        this.y = H + 50;
+        this.x = Math.random() * W;
+      }
+    }
+
+    draw() {
+      const col = this.isRed
+        ? `rgba(239, 35, 60, ${this.alpha})`
+        : `rgba(141, 153, 174, ${this.alpha})`;
+      
+      ctx.strokeStyle = col;
+      ctx.lineWidth = 0.8;
+
+      // Main box
+      ctx.strokeRect(this.x, this.y, this.w, this.h);
+
+      // Header bar
+      if (this.hasHeader) {
+        ctx.strokeRect(this.x, this.y, this.w, this.h * 0.2);
+        // 3 dots in header (like browser)
+        const dotY = this.y + this.h * 0.1;
+        for (let i = 0; i < 3; i++) {
+          ctx.beginPath();
+          ctx.arc(this.x + 6 + i * 7, dotY, 1.5, 0, Math.PI * 2);
+          ctx.fillStyle = col;
+          ctx.fill();
+        }
+      }
+
+      // Sidebar
+      if (this.hasSidebar) {
+        const sideW = this.w * 0.3;
+        const startY = this.hasHeader ? this.y + this.h * 0.2 : this.y;
+        const sideH = this.hasHeader ? this.h * 0.8 : this.h;
+        ctx.strokeRect(this.x, startY, sideW, sideH);
+      }
+
+      // Content lines
+      const contentX = this.hasSidebar ? this.x + this.w * 0.35 : this.x + 5;
+      const contentW = this.hasSidebar ? this.w * 0.55 : this.w - 10;
+      const startContentY = this.hasHeader ? this.y + this.h * 0.3 : this.y + 5;
+      
+      ctx.fillStyle = col;
+      for (let i = 0; i < 3; i++) {
+        const lw = contentW * (0.5 + Math.random() * 0.4);
+        ctx.fillRect(contentX, startContentY + i * 8, lw, 2);
+      }
     }
   }
 
-  // ═══ Render Loop ═══
+  // ─── Bracket Pairs { } < > ───
+  class FloatingBracket {
+    constructor() {
+      this.x = Math.random() * W;
+      this.y = H + 20 + Math.random() * H;
+      this.speed = Math.random() * 0.25 + 0.1;
+      this.alpha = Math.random() * 0.08 + 0.02;
+      this.size = Math.random() * 30 + 20;
+      this.type = Math.floor(Math.random() * 3); // 0: { }, 1: < >, 2: ( )
+      this.rot = Math.random() * 0.4 - 0.2;
+      this.rotSpeed = (Math.random() - 0.5) * 0.001;
+      this.isRed = Math.random() < 0.15;
+    }
+
+    update() {
+      this.y -= this.speed;
+      this.rot += this.rotSpeed;
+      if (this.y < -50) {
+        this.y = H + 20;
+        this.x = Math.random() * W;
+      }
+    }
+
+    draw() {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rot);
+
+      const col = this.isRed
+        ? `rgba(239, 35, 60, ${this.alpha})`
+        : `rgba(141, 153, 174, ${this.alpha})`;
+      ctx.strokeStyle = col;
+      ctx.lineWidth = 1;
+
+      const s = this.size;
+
+      if (this.type === 0) {
+        // Curly braces { }
+        ctx.beginPath();
+        ctx.moveTo(-s, -s * 0.6);
+        ctx.quadraticCurveTo(-s * 0.3, -s * 0.3, -s * 0.5, 0);
+        ctx.quadraticCurveTo(-s * 0.3, s * 0.3, -s, s * 0.6);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(s, -s * 0.6);
+        ctx.quadraticCurveTo(s * 0.3, -s * 0.3, s * 0.5, 0);
+        ctx.quadraticCurveTo(s * 0.3, s * 0.3, s, s * 0.6);
+        ctx.stroke();
+      } else if (this.type === 1) {
+        // Angle brackets < >
+        ctx.beginPath();
+        ctx.moveTo(-s * 0.3, -s * 0.5);
+        ctx.lineTo(-s * 0.8, 0);
+        ctx.lineTo(-s * 0.3, s * 0.5);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(s * 0.3, -s * 0.5);
+        ctx.lineTo(s * 0.8, 0);
+        ctx.lineTo(s * 0.3, s * 0.5);
+        ctx.stroke();
+
+        // Slash in center
+        ctx.beginPath();
+        ctx.moveTo(s * 0.1, -s * 0.35);
+        ctx.lineTo(-s * 0.1, s * 0.35);
+        ctx.stroke();
+      } else {
+        // Parentheses ( )
+        ctx.beginPath();
+        ctx.arc(-s * 0.3, 0, s * 0.5, -Math.PI * 0.4, Math.PI * 0.4);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(s * 0.3, 0, s * 0.5, Math.PI - Math.PI * 0.4, Math.PI + Math.PI * 0.4);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+  }
+
+  // ─── Initialize ───
+  const floatingTags = [];
+  for (let i = 0; i < 50; i++) {
+    const t = new FloatingTag();
+    t.y = Math.random() * H; // Some start on screen
+    floatingTags.push(t);
+  }
+
+  const wireframes = [];
+  for (let i = 0; i < 12; i++) {
+    const w = new WireframeBox();
+    w.y = Math.random() * H;
+    wireframes.push(w);
+  }
+
+  const brackets = [];
+  for (let i = 0; i < 15; i++) {
+    const b = new FloatingBracket();
+    b.y = Math.random() * H;
+    brackets.push(b);
+  }
+
+  // ─── Render ───
   function render() {
-    // Clear with dark navy
-    c.fillStyle = '#2b2d42';
-    c.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#2b2d42';
+    ctx.fillRect(0, 0, W, H);
 
-    // Grid
-    drawGrid();
+    // Draw wireframe boxes first (furthest back)
+    for (const w of wireframes) { w.update(); w.draw(); }
 
-    // Mouse glow
-    const glow = c.createRadialGradient(mx, my, 0, mx, my, 250);
-    glow.addColorStop(0, 'rgba(239, 35, 60, 0.05)');
-    glow.addColorStop(0.5, 'rgba(141, 153, 174, 0.02)');
-    glow.addColorStop(1, 'rgba(43, 45, 66, 0)');
-    c.fillStyle = glow;
-    c.fillRect(0, 0, W, H);
+    // Draw brackets
+    for (const b of brackets) { b.update(); b.draw(); }
 
-    // Stars
-    for (const s of stars) {
-      s.update();
-      s.draw();
-    }
+    // Draw floating tags (front)
+    for (const t of floatingTags) { t.update(); t.draw(); }
 
     requestAnimationFrame(render);
   }
