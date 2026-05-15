@@ -556,7 +556,7 @@ const UserApp = {
     logout() {
         this.saveCurrentWork(); Tracker.stop(); this.stopTimer();
         if (this.autoSaveInterval) clearInterval(this.autoSaveInterval);
-        Auth.logoutParticipant(); window.location.href = 'index.html';
+        Auth.logoutParticipant(); window.location.href = 'login.html';
     },
 
     toggleTheme() {

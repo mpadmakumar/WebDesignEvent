@@ -1,58 +1,270 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login | Web Design Competition</title>
-  <meta name="description" content="Web Designing Competition - Participant Login">
-  <link rel="stylesheet" href="css/style.css">
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+  <title>SoftTech Association | Web Design Challenge</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Montserrat:wght@400;700;900&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #0b0c10;
+      color: #fff;
+      font-family: 'Share Tech Mono', monospace;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* Canvas Background */
+    #particle-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .content-wrapper {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .header-box {
+      border: 1px solid rgba(0, 255, 255, 0.4);
+      padding: 20px 40px;
+      background: rgba(0, 20, 30, 0.5);
+      backdrop-filter: blur(4px);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .college-name {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 4px;
+      color: #e0e0e0;
+      margin-bottom: 8px;
+    }
+
+    .dept-name {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 3px;
+      color: #00ffff;
+      text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+    }
+
+    .main-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 6rem;
+      line-height: 1.1;
+      letter-spacing: 8px;
+      color: #ffffff;
+      text-shadow: 
+        0 0 10px rgba(0, 255, 255, 0.8),
+        0 0 20px rgba(0, 255, 255, 0.6),
+        0 0 40px rgba(0, 255, 255, 0.4),
+        0 0 80px rgba(0, 255, 255, 0.2);
+      animation: pulse 3s infinite alternate;
+      margin-bottom: 20px;
+    }
+
+    @keyframes pulse {
+      0% { text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.6), 0 0 40px rgba(0, 255, 255, 0.4); }
+      100% { text-shadow: 0 0 15px rgba(0, 255, 255, 1), 0 0 30px rgba(0, 255, 255, 0.8), 0 0 60px rgba(0, 255, 255, 0.6), 0 0 100px rgba(0, 255, 255, 0.4); }
+    }
+
+    .sub-title {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.2rem;
+      letter-spacing: 8px;
+      color: #a0a0a0;
+      text-transform: uppercase;
+      margin-bottom: 40px;
+    }
+
+    .btn-start {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.3rem;
+      letter-spacing: 4px;
+      color: #00ffff;
+      background: transparent;
+      border: 1px solid rgba(0, 255, 255, 0.6);
+      padding: 15px 40px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+    }
+
+    .btn-start:hover {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.4);
+      color: #ffffff;
+      text-shadow: 0 0 8px #00ffff;
+    }
+
+    .btn-start::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.4), transparent);
+      transition: all 0.5s ease;
+    }
+
+    .btn-start:hover::before {
+      left: 100%;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 20px;
+      font-size: 0.75rem;
+      color: #555;
+      letter-spacing: 1px;
+      z-index: 10;
+    }
+
+    @media (max-width: 900px) {
+      .main-title { font-size: 4rem; }
+      .header-box { padding: 15px 20px; }
+      .college-name { font-size: 0.9rem; }
+      .dept-name { font-size: 0.8rem; }
+    }
+    @media (max-width: 600px) {
+      .main-title { font-size: 3rem; letter-spacing: 4px; }
+      .sub-title { font-size: 1rem; letter-spacing: 4px; }
+    }
+  </style>
 </head>
 <body>
-  <div class="bg-animate"></div>
-  <div class="login-wrapper">
-    <div class="login-card glass fade-in">
-      <div class="logo"><span>🎨 DesignArena</span></div>
-      <p class="subtitle">Web Designing Competition Platform</p>
 
-      <form id="login-form" onsubmit="handleLogin(event)">
+  <!-- Particle Background -->
+  <canvas id="particle-canvas"></canvas>
 
-        <div class="form-group">
-          <label for="lotNumber">🎫 Lot Number</label>
-          <input type="text" id="lotNumber" class="form-control" placeholder="e.g. LOT001" required autocomplete="off">
-        </div>
-        <div id="login-error" style="color:var(--danger);font-size:.85rem;margin-bottom:16px;display:none;padding:10px;background:rgba(239,68,68,.1);border-radius:8px;border:1px solid var(--danger)"></div>
-        <button type="submit" class="btn btn-primary btn-lg" style="width:100%">🚀 Enter Competition</button>
-      </form>
-
-
-
-      <div style="margin-top:16px;display:flex;justify-content:space-between;align-items:center">
-        <div class="theme-toggle" onclick="toggleTheme()" title="Toggle theme"></div>
-        <a href="admin/login.html" class="btn btn-secondary btn-sm">🔐 Admin</a>
-      </div>
+  <div class="content-wrapper">
+    
+    <div class="header-box">
+      <div class="college-name">AYYA NADAR JANAKI AMMAL COLLEGE</div>
+      <div class="dept-name">DEPARTMENT OF COMPUTER APPLICATIONS</div>
     </div>
+
+    <div class="main-title">
+      SOFTTECH<br>ASSOCIATION
+    </div>
+
+    <div class="sub-title">
+      THE ULTIMATE WEB DESIGN CHALLENGE
+    </div>
+
+    <a href="login.html" class="btn-start">
+      > START_SYSTEM
+    </a>
+
   </div>
 
-  <script src="js/storage.js"></script>
-  <script src="js/auth.js"></script>
+  <div class="footer">
+    © 2026 Ayya Nadar Janaki Ammal College. Dept. of Computer Applications. All rights reserved.
+  </div>
+
   <script>
-    (function(){ document.documentElement.setAttribute('data-theme', localStorage.getItem('appTheme')||'dark'); })();
-    function toggleTheme(){ const c=document.documentElement.getAttribute('data-theme'); const n=c==='dark'?'light':'dark'; document.documentElement.setAttribute('data-theme',n); localStorage.setItem('appTheme',n); }
-    function handleLogin(e){
-      e.preventDefault();
-      const lotNumber=document.getElementById('lotNumber').value.trim().toUpperCase();
-      const result=Auth.loginParticipant(lotNumber);
-      if(result.success){ window.location.href='user-dashboard.html'; }
-      else {
-        const err=document.getElementById('login-error');
-        err.textContent=result.message; err.style.display='block';
-        document.getElementById('login-form').classList.add('shake');
-        setTimeout(()=>document.getElementById('login-form').classList.remove('shake'),500);
+    // Particle Network Animation
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 0.8;
+        this.vy = (Math.random() - 0.5) * 0.8;
+        this.radius = Math.random() * 2 + 0.5;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < 0 || this.x > width) this.vx = -this.vx;
+        if (this.y < 0 || this.y > height) this.vy = -this.vy;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0, 255, 255, 0.6)';
+        ctx.fill();
       }
     }
-    if(Auth.isParticipantLoggedIn()) window.location.href='user-dashboard.html';
+
+    function initParticles() {
+      particles = [];
+      const numParticles = Math.floor((width * height) / 12000);
+      for (let i = 0; i < numParticles; i++) {
+        particles.push(new Particle());
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 120) {
+            ctx.beginPath();
+            ctx.strokeStyle = \`rgba(0, 255, 255, \${0.2 - distance/600})\`;
+            ctx.lineWidth = 0.5;
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    initParticles();
+    animate();
   </script>
 </body>
 </html>

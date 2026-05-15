@@ -69,7 +69,7 @@ const Auth = {
     // ── Route Guards ──────────────────────────────────────
     requireParticipant() {
         if (!this.isParticipantLoggedIn()) {
-            window.location.href = 'index.html';
+            window.location.href = 'login.html';
             return false;
         }
         return true;
