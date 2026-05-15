@@ -47,9 +47,9 @@
     }
 
     .header-box {
-      border: 1px solid rgba(255, 140, 0, 0.3);
+      border: 1px solid rgba(0, 255, 255, 0.4);
       padding: 20px 40px;
-      background: rgba(10, 0, 20, 0.4);
+      background: rgba(0, 20, 30, 0.5);
       backdrop-filter: blur(4px);
       margin-bottom: 20px;
     }
@@ -68,8 +68,8 @@
       font-weight: 700;
       font-size: 0.95rem;
       letter-spacing: 3px;
-      color: #ff8c00;
-      text-shadow: 0 0 8px rgba(255, 140, 0, 0.6);
+      color: #00ffff;
+      text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
     }
 
     .main-title {
@@ -78,19 +78,19 @@
       font-size: 6rem;
       line-height: 1.1;
       letter-spacing: 8px;
-      color: #ffaa00;
+      color: #ffffff;
       text-shadow: 
-        0 0 10px rgba(255, 140, 0, 0.8),
-        0 0 20px rgba(255, 140, 0, 0.6),
-        0 0 40px rgba(255, 60, 0, 0.4),
-        0 0 80px rgba(255, 0, 0, 0.2);
+        0 0 10px rgba(0, 255, 255, 0.8),
+        0 0 20px rgba(0, 150, 255, 0.6),
+        0 0 40px rgba(0, 100, 255, 0.4),
+        0 0 80px rgba(0, 50, 255, 0.2);
       animation: pulse 3s infinite alternate;
       margin-bottom: 20px;
     }
 
     @keyframes pulse {
-      0% { text-shadow: 0 0 10px rgba(255, 140, 0, 0.8), 0 0 20px rgba(255, 140, 0, 0.6), 0 0 40px rgba(255, 60, 0, 0.4); }
-      100% { text-shadow: 0 0 15px rgba(255, 160, 0, 1), 0 0 30px rgba(255, 120, 0, 0.8), 0 0 60px rgba(255, 60, 0, 0.6), 0 0 100px rgba(255, 0, 0, 0.4); }
+      0% { text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 150, 255, 0.6), 0 0 40px rgba(0, 100, 255, 0.4); }
+      100% { text-shadow: 0 0 15px rgba(0, 255, 255, 1), 0 0 30px rgba(0, 200, 255, 0.8), 0 0 60px rgba(0, 150, 255, 0.6), 0 0 100px rgba(0, 100, 255, 0.4); }
     }
 
     .sub-title {
@@ -106,9 +106,9 @@
       font-family: 'Share Tech Mono', monospace;
       font-size: 1.3rem;
       letter-spacing: 4px;
-      color: #ff8c00;
+      color: #00ffff;
       background: transparent;
-      border: 1px solid rgba(255, 140, 0, 0.6);
+      border: 1px solid rgba(0, 255, 255, 0.6);
       padding: 15px 40px;
       cursor: pointer;
       text-decoration: none;
@@ -119,10 +119,10 @@
     }
 
     .btn-start:hover {
-      background: rgba(255, 140, 0, 0.1);
-      box-shadow: 0 0 20px rgba(255, 140, 0, 0.4), inset 0 0 10px rgba(255, 140, 0, 0.4);
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.4);
       color: #ffffff;
-      text-shadow: 0 0 8px #ff8c00;
+      text-shadow: 0 0 8px #00ffff;
     }
 
     .btn-start::before {
@@ -130,7 +130,7 @@
       position: absolute;
       top: 0; left: -100%;
       width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 140, 0, 0.4), transparent);
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.4), transparent);
       transition: all 0.5s ease;
     }
 
@@ -211,7 +211,7 @@
         this.vx = (Math.random() - 0.5) * 0.8;
         this.vy = (Math.random() - 0.5) * 0.8;
         this.radius = Math.random() * 2 + 0.5;
-        this.color = Math.random() > 0.5 ? 'rgba(255, 140, 0, 0.8)' : 'rgba(138, 43, 226, 0.8)';
+        this.color = Math.random() > 0.5 ? 'rgba(0, 255, 255, 0.8)' : 'rgba(0, 150, 255, 0.8)';
       }
 
       update() {
@@ -229,14 +229,14 @@
         ctx.fill();
         
         // Add glow
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 12;
         ctx.shadowColor = this.color;
       }
     }
 
     function initParticles() {
       particles = [];
-      const numParticles = Math.floor((width * height) / 12000);
+      const numParticles = Math.floor((width * height) / 9000); // More particles
       for (let i = 0; i < numParticles; i++) {
         particles.push(new Particle());
       }
@@ -255,10 +255,11 @@
           const dy = particles[i].y - particles[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < 120) {
+          // Increased connection distance for more "constellation" effect
+          if (distance < 160) {
             ctx.beginPath();
-            ctx.strokeStyle = \`rgba(255, 140, 0, \${0.15 - distance/800})\`;
-            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = \`rgba(0, 200, 255, \${0.2 - distance/800})\`;
+            ctx.lineWidth = 0.6;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             ctx.stroke();
