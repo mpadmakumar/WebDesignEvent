@@ -14,7 +14,8 @@
     }
 
     body {
-      background-color: #0b0c10;
+      background-color: #080310;
+      background-image: radial-gradient(circle at center, #150a21 0%, #080310 100%);
       color: #fff;
       font-family: 'Share Tech Mono', monospace;
       height: 100vh;
@@ -208,10 +209,18 @@
       constructor() {
         this.x = Math.random() * width;
         this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.8;
-        this.vy = (Math.random() - 0.5) * 0.8;
-        this.radius = Math.random() * 2 + 0.5;
-        this.color = Math.random() > 0.5 ? 'rgba(0, 255, 255, 0.8)' : 'rgba(0, 150, 255, 0.8)';
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+        this.radius = Math.random() * 2 + 1; // Slightly larger particles
+        
+        // Multi-color dots to match the exact image (Orange, Yellow, Purple)
+        const colors = [
+          { r: 255, g: 140, b: 0 },   // Orange
+          { r: 255, g: 215, b: 0 },   // Yellow
+          { r: 138, g: 43,  b: 226 }  // Purple
+        ];
+        this.baseColor = colors[Math.floor(Math.random() * colors.length)];
+        this.colorStr = \`rgba(\${this.baseColor.r}, \${this.baseColor.g}, \${this.baseColor.b}, 0.9)\`;
       }
 
       update() {
@@ -225,18 +234,18 @@
       draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = this.color;
+        ctx.fillStyle = this.colorStr;
         ctx.fill();
         
-        // Add glow
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = this.color;
+        // Soft glowing aura around particle
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = this.colorStr;
       }
     }
 
     function initParticles() {
       particles = [];
-      const numParticles = Math.floor((width * height) / 9000); // More particles
+      const numParticles = Math.floor((width * height) / 10000); 
       for (let i = 0; i < numParticles; i++) {
         particles.push(new Particle());
       }
@@ -248,18 +257,19 @@
       for (let i = 0; i < particles.length; i++) {
         particles[i].update();
         particles[i].draw();
-        ctx.shadowBlur = 0; // reset shadow for lines
+        ctx.shadowBlur = 0; // reset shadow before drawing lines
 
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          // Increased connection distance for more "constellation" effect
-          if (distance < 160) {
+          // Connect nearby particles to form constellations
+          if (distance < 140) {
             ctx.beginPath();
-            ctx.strokeStyle = \`rgba(0, 200, 255, \${0.2 - distance/800})\`;
-            ctx.lineWidth = 0.6;
+            // Extremely faint yellowish/orange lines to match the image
+            ctx.strokeStyle = \`rgba(255, 180, 50, \${0.15 - distance/933})\`;
+            ctx.lineWidth = 0.5;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             ctx.stroke();
