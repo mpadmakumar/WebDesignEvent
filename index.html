@@ -9,7 +9,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: #2b2d42;
+      background: #05050f;
       color: #edf2f4;
       font-family: 'Rajdhani', sans-serif;
       height: 100vh;
@@ -18,7 +18,7 @@
       align-items: center;
       justify-content: center;
       position: relative;
-      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M4 2 L4 24 L10 18 L16 26 L20 24 L14 16 L22 16 Z' fill='%23edf2f4' stroke='%232b2d42' stroke-width='1.5'/%3E%3C/svg%3E") 4 2, auto;
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M4 2 L4 24 L10 18 L16 26 L20 24 L14 16 L22 16 Z' fill='white' stroke='%2305050f' stroke-width='1.5'/%3E%3C/svg%3E") 4 2, auto;
     }
 
     canvas#bg {
@@ -28,6 +28,15 @@
       z-index: 0;
     }
 
+    /* Radial overlay so content always pops */
+    .overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(ellipse at center, rgba(5,5,15,0.3) 0%, rgba(5,5,15,0.75) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
     .content {
       position: relative;
       z-index: 10;
@@ -35,111 +44,139 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 38px;
+      gap: 36px;
     }
 
+    /* ── Header Box ── */
     .hbox {
-      padding: 20px 60px;
+      padding: 18px 55px;
       position: relative;
-      background: rgba(43, 45, 66, 0.7);
-      backdrop-filter: blur(12px);
-      border-left: 3px solid #ef233c;
-      border-right: 3px solid #ef233c;
+      background: rgba(10, 10, 30, 0.6);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 75, 110, 0.3);
+      border-radius: 2px;
     }
     .hbox::before, .hbox::after {
       content: '';
       position: absolute;
-      width: 100%; height: 1px;
-      background: linear-gradient(90deg, #ef233c, rgba(141,153,174,0.3), #ef233c);
-      left: 0;
+      width: 16px; height: 16px;
+      border-color: #ff4b6e;
+      border-style: solid;
     }
-    .hbox::before { top: 0; }
-    .hbox::after { bottom: 0; }
+    .hbox::before { top: -2px; left: -2px; border-width: 2px 0 0 2px; }
+    .hbox::after  { bottom: -2px; right: -2px; border-width: 0 2px 2px 0; }
 
     .col-name {
       font-weight: 700;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       letter-spacing: 6px;
-      color: #edf2f4;
+      color: #d0d8e8;
       text-transform: uppercase;
     }
     .dep-name {
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 0.95rem;
       letter-spacing: 4px;
-      color: #ef233c;
-      margin-top: 8px;
+      color: #ff4b6e;
+      margin-top: 7px;
+      text-shadow: 0 0 12px rgba(255,75,110,0.5);
     }
 
+    /* ── Main Title ── */
     .t1 {
       font-family: 'Orbitron', sans-serif;
       font-weight: 900;
-      font-size: 8rem;
+      font-size: 7.8rem;
       letter-spacing: 10px;
       line-height: 0.88;
-      color: #edf2f4;
-      text-shadow: 0 0 40px rgba(239, 35, 60, 0.25);
+      background: linear-gradient(135deg, #ffffff 0%, #a8c8ff 40%, #ff4b6e 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradShift 6s ease-in-out infinite alternate;
+      position: relative;
     }
     .t1::after {
       content: '';
       display: block;
-      width: 60%;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, #ef233c, transparent);
-      margin: 12px auto 0;
+      width: 55%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #ff4b6e, #5b8cff, transparent);
+      margin: 14px auto 0;
     }
     .t2 {
       font-family: 'Orbitron', sans-serif;
       font-weight: 900;
-      font-size: 5.5rem;
-      letter-spacing: 24px;
-      color: #ef233c;
-      text-shadow: 0 0 30px rgba(239, 35, 60, 0.3);
-      margin-top: 8px;
+      font-size: 5.2rem;
+      letter-spacing: 22px;
+      background: linear-gradient(135deg, #ff4b6e 0%, #ff8c69 50%, #ffca3a 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradShift 5s ease-in-out infinite alternate-reverse;
+      margin-top: 6px;
+    }
+
+    @keyframes gradShift {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
     }
 
     .sub {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       letter-spacing: 10px;
-      color: #8d99ae;
+      color: #6b7a99;
       text-transform: uppercase;
       font-weight: 500;
     }
 
+    /* ── CTA Button ── */
     .cta {
       font-family: 'Rajdhani', sans-serif;
       font-weight: 700;
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       letter-spacing: 5px;
       color: #edf2f4;
-      background: transparent;
-      border: 1px solid rgba(239, 35, 60, 0.4);
-      padding: 16px 55px;
+      background: rgba(255,75,110,0.07);
+      border: 1px solid rgba(255,75,110,0.5);
+      padding: 17px 58px;
       text-decoration: none;
       position: relative;
       overflow: hidden;
       transition: all 0.4s ease;
+      border-radius: 2px;
     }
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,75,110,0.15), transparent);
+      transition: left 0.5s ease;
+    }
+    .cta:hover {
+      border-color: #ff4b6e;
+      box-shadow: 0 0 30px rgba(255,75,110,0.25), inset 0 0 15px rgba(255,75,110,0.05);
+      color: #fff;
+    }
+    .cta:hover::before { left: 100%; }
+
+    /* pulse bar */
     .cta::after {
       content: '';
       position: absolute;
       bottom: 0; left: 0;
-      width: 0; height: 2px;
-      background: #ef233c;
+      width: 0; height: 1px;
+      background: linear-gradient(90deg, #ff4b6e, #5b8cff);
       transition: width 0.4s ease;
-    }
-    .cta:hover {
-      background: rgba(239, 35, 60, 0.08);
-      border-color: #ef233c;
-      box-shadow: 0 0 25px rgba(239, 35, 60, 0.15);
     }
     .cta:hover::after { width: 100%; }
 
     .foot {
       position: absolute;
-      bottom: 22px;
-      font-size: 0.7rem;
-      color: #555;
+      bottom: 20px;
+      font-size: 0.68rem;
+      color: #333;
       letter-spacing: 2px;
       z-index: 10;
       text-transform: uppercase;
@@ -147,9 +184,9 @@
 
     @media (max-width: 900px) {
       .t1 { font-size: 4.5rem; letter-spacing: 5px; }
-      .t2 { font-size: 3rem; letter-spacing: 14px; }
-      .hbox { padding: 14px 25px; }
-      .col-name { font-size: 0.85rem; }
+      .t2 { font-size: 3rem; letter-spacing: 12px; }
+      .hbox { padding: 14px 22px; }
+      .col-name { font-size: 0.82rem; }
     }
     @media (max-width: 500px) {
       .t1 { font-size: 3rem; }
@@ -160,6 +197,7 @@
 <body>
 
   <canvas id="bg"></canvas>
+  <div class="overlay"></div>
 
   <div class="content">
     <div class="hbox">
@@ -181,276 +219,198 @@
   const ctx = cv.getContext('2d');
   let W, H;
 
-  function resize() {
-    W = cv.width = window.innerWidth;
-    H = cv.height = window.innerHeight;
-  }
+  function resize() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
   window.addEventListener('resize', resize);
   resize();
 
-  // ═══════════════════════════════════════
-  //  PURE VISUAL DESIGN ANIMATION
-  //  No text — only shapes, lines, colors
-  //  Perfect for Web Design Event
-  // ═══════════════════════════════════════
+  // ═══════════════════════════════════════════
+  //  AURORA NEBULA BACKGROUND
+  //  Flowing nebula blobs + star field + rings
+  // ═══════════════════════════════════════════
 
-  // ─── Floating Layout Blocks ───
-  class LayoutBlock {
-    constructor() {
+  // ─── Color palette ───
+  const COLORS = [
+    { r:255, g:75,  b:110 },   // Hot pink/red
+    { r:91,  g:140, b:255 },   // Electric blue
+    { r:255, g:200, b:58  },   // Gold
+    { r:120, g:80,  b:255 },   // Violet
+    { r:50,  g:205, b:170 },   // Teal
+  ];
+
+  // ─── Starfield ───
+  const STARS = [];
+  for (let i = 0; i < 280; i++) {
+    STARS.push({
+      x: Math.random() * 2000,
+      y: Math.random() * 1200,
+      r: Math.random() * 1.3 + 0.2,
+      phase: Math.random() * Math.PI * 2,
+      speed: Math.random() * 0.012 + 0.003,
+      ci: Math.floor(Math.random() * COLORS.length)
+    });
+  }
+
+  // ─── Nebula Blobs ───
+  class NebulaBlob {
+    constructor() { this.reset(true); }
+    reset(init = false) {
+      this.ci = Math.floor(Math.random() * COLORS.length);
       this.x = Math.random() * W;
-      this.y = H + 50 + Math.random() * H;
-      this.w = Math.random() * 120 + 40;
-      this.h = Math.random() * 80 + 30;
-      this.speed = Math.random() * 0.35 + 0.15;
-      this.alpha = Math.random() * 0.12 + 0.1;
-      this.rot = (Math.random() - 0.5) * 0.15;
-      this.rotSpeed = (Math.random() - 0.5) * 0.0005;
-      this.isRed = Math.random() < 0.25;
-      this.style = Math.floor(Math.random() * 4); // 0-3 different layouts
+      this.y = init ? Math.random() * H : H + 150;
+      this.r = Math.random() * 130 + 60;
+      this.vy = -(Math.random() * 0.18 + 0.06);
+      this.vx = (Math.random() - 0.5) * 0.12;
+      this.alpha = Math.random() * 0.05 + 0.02;
+      this.pulse = Math.random() * Math.PI * 2;
+      this.pulseSpeed = Math.random() * 0.008 + 0.003;
     }
-
     update() {
-      this.y -= this.speed;
-      this.rot += this.rotSpeed;
-      if (this.y < -120) {
-        this.y = H + 50;
-        this.x = Math.random() * W;
-      }
+      this.x += this.vx;
+      this.y += this.vy;
+      this.pulse += this.pulseSpeed;
+      if (this.y < -200) this.reset();
     }
-
     draw() {
-      ctx.save();
-      ctx.translate(this.x + this.w / 2, this.y + this.h / 2);
-      ctx.rotate(this.rot);
-      ctx.translate(-this.w / 2, -this.h / 2);
-
-      const col = this.isRed ? `rgba(239,35,60,${this.alpha})` : `rgba(141,153,174,${this.alpha})`;
-      ctx.strokeStyle = col;
-      ctx.fillStyle = col;
-      ctx.lineWidth = 1.2;
-
-      // Outer frame
-      ctx.strokeRect(0, 0, this.w, this.h);
-
-      if (this.style === 0) {
-        // Browser window: header bar + 3 dots + content area
-        ctx.fillRect(0, 0, this.w, 8);
-        ctx.globalAlpha = this.alpha * 1.5;
-        for (let i = 0; i < 3; i++) {
-          ctx.beginPath();
-          ctx.arc(5 + i * 6, 4, 1.5, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        ctx.globalAlpha = 1;
-        // Content blocks
-        ctx.fillRect(5, 14, this.w * 0.6, 3);
-        ctx.fillRect(5, 21, this.w * 0.4, 3);
-        ctx.fillRect(5, 28, this.w * 0.7, 3);
-      }
-      else if (this.style === 1) {
-        // Two-column layout
-        const midX = this.w * 0.35;
-        ctx.beginPath();
-        ctx.moveTo(midX, 0);
-        ctx.lineTo(midX, this.h);
-        ctx.stroke();
-        // Left side blocks
-        ctx.fillRect(4, 5, midX - 8, 6);
-        ctx.fillRect(4, 15, midX - 12, 6);
-        // Right side blocks
-        ctx.fillRect(midX + 4, 5, this.w - midX - 8, this.h - 10);
-      }
-      else if (this.style === 2) {
-        // Card grid layout
-        const cardW = (this.w - 12) / 3;
-        const cardH = this.h - 10;
-        for (let i = 0; i < 3; i++) {
-          ctx.strokeRect(3 + i * (cardW + 3), 5, cardW, cardH);
-          ctx.fillRect(3 + i * (cardW + 3) + 3, 8, cardW - 6, cardH * 0.4);
-        }
-      }
-      else {
-        // Hero section layout
-        ctx.fillRect(this.w * 0.2, this.h * 0.15, this.w * 0.6, 4);
-        ctx.fillRect(this.w * 0.3, this.h * 0.35, this.w * 0.4, 3);
-        ctx.strokeRect(this.w * 0.35, this.h * 0.55, this.w * 0.3, this.h * 0.2);
-      }
-
-      ctx.restore();
+      const { r, g, b } = COLORS[this.ci];
+      const pr = this.r + Math.sin(this.pulse) * 15;
+      const a = this.alpha + Math.sin(this.pulse) * 0.01;
+      const gr = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, pr);
+      gr.addColorStop(0, `rgba(${r},${g},${b},${a * 3})`);
+      gr.addColorStop(0.4, `rgba(${r},${g},${b},${a})`);
+      gr.addColorStop(1, `rgba(${r},${g},${b},0)`);
+      ctx.fillStyle = gr;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, pr, 0, Math.PI * 2);
+      ctx.fill();
     }
   }
 
-  // ─── Color Palette Swatches ───
-  class ColorSwatch {
-    constructor() {
+  // ─── Particle Network ───
+  class Particle {
+    constructor() { this.reset(true); }
+    reset(init = false) {
+      this.ci = Math.floor(Math.random() * COLORS.length);
       this.x = Math.random() * W;
-      this.y = H + 20 + Math.random() * H;
-      this.speed = Math.random() * 0.25 + 0.1;
-      this.size = Math.random() * 14 + 8;
-      this.alpha = Math.random() * 0.2 + 0.15;
-      this.colors = this.pickPalette();
-      this.gap = 2;
+      this.y = init ? Math.random() * H : H + 10;
+      this.vy = -(Math.random() * 0.4 + 0.1);
+      this.vx = (Math.random() - 0.5) * 0.3;
+      this.r = Math.random() * 2 + 0.8;
+      this.alpha = Math.random() * 0.5 + 0.3;
+      this.phase = Math.random() * Math.PI * 2;
+      this.phaseSpeed = Math.random() * 0.02 + 0.005;
     }
-
-    pickPalette() {
-      const palettes = [
-        ['#ef233c', '#8d99ae', '#edf2f4', '#2b2d42'],
-        ['#ef233c', '#d90429', '#8d99ae', '#edf2f4'],
-        ['#2b2d42', '#3a3d5c', '#8d99ae', '#edf2f4'],
-        ['#ef233c', '#ff6b6b', '#ffa07a', '#edf2f4'],
-      ];
-      return palettes[Math.floor(Math.random() * palettes.length)];
-    }
-
     update() {
-      this.y -= this.speed;
-      if (this.y < -40) {
-        this.y = H + 20;
-        this.x = Math.random() * W;
-        this.colors = this.pickPalette();
-      }
+      this.x += this.vx;
+      this.y += this.vy;
+      this.phase += this.phaseSpeed;
+      if (this.y < -10) this.reset();
     }
-
     draw() {
-      ctx.globalAlpha = this.alpha;
-      for (let i = 0; i < this.colors.length; i++) {
-        ctx.fillStyle = this.colors[i];
-        ctx.fillRect(
-          this.x + i * (this.size + this.gap),
-          this.y,
-          this.size,
-          this.size
-        );
-      }
-      // Outline
-      ctx.strokeStyle = `rgba(237,242,244,${this.alpha * 0.5})`;
-      ctx.lineWidth = 0.8;
-      ctx.strokeRect(
-        this.x - 1,
-        this.y - 1,
-        this.colors.length * (this.size + this.gap) - this.gap + 2,
-        this.size + 2
-      );
-      ctx.globalAlpha = 1;
-    }
-  }
-
-  // ─── Design Circles / Dots ───
-  class DesignCircle {
-    constructor() {
-      this.x = Math.random() * W;
-      this.y = H + 20 + Math.random() * H;
-      this.r = Math.random() * 25 + 10;
-      this.speed = Math.random() * 0.3 + 0.1;
-      this.alpha = Math.random() * 0.1 + 0.08;
-      this.isRed = Math.random() < 0.2;
-      this.isDashed = Math.random() > 0.5;
-    }
-
-    update() {
-      this.y -= this.speed;
-      if (this.y < -50) {
-        this.y = H + 20;
-        this.x = Math.random() * W;
-      }
-    }
-
-    draw() {
-      const col = this.isRed ? `rgba(239,35,60,${this.alpha})` : `rgba(141,153,174,${this.alpha})`;
-      ctx.strokeStyle = col;
-      ctx.lineWidth = 1.2;
-
-      if (this.isDashed) {
-        ctx.setLineDash([4, 4]);
-      }
-
+      const { r, g, b } = COLORS[this.ci];
+      const a = this.alpha * (0.6 + 0.4 * Math.sin(this.phase));
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.stroke();
-
-      // Inner dot
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
-      ctx.fillStyle = col;
+      ctx.fillStyle = `rgba(${r},${g},${b},${a})`;
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = `rgba(${r},${g},${b},0.5)`;
       ctx.fill();
-
-      // Crosshair lines
-      ctx.beginPath();
-      ctx.moveTo(this.x - this.r * 0.4, this.y);
-      ctx.lineTo(this.x + this.r * 0.4, this.y);
-      ctx.moveTo(this.x, this.y - this.r * 0.4);
-      ctx.lineTo(this.x, this.y + this.r * 0.4);
-      ctx.stroke();
-
-      ctx.setLineDash([]);
+      ctx.shadowBlur = 0;
     }
   }
 
-  // ─── Flowing Bezier Curves ───
-  class FlowCurve {
-    constructor() {
-      this.reset();
-    }
-
+  // ─── Expanding Rings ───
+  class Ring {
+    constructor() { this.reset(); }
     reset() {
-      this.y1 = H + Math.random() * 200;
-      this.x1 = Math.random() * W * 0.3;
-      this.x2 = W * 0.3 + Math.random() * W * 0.4;
-      this.x3 = W * 0.6 + Math.random() * W * 0.4;
-      this.cpOffset = Math.random() * 100 + 30;
-      this.speed = Math.random() * 0.4 + 0.15;
-      this.alpha = Math.random() * 0.1 + 0.08;
-      this.isRed = Math.random() < 0.2;
+      this.x = Math.random() * W;
+      this.y = Math.random() * H;
+      this.r = 0;
+      this.maxR = Math.random() * 180 + 80;
+      this.speed = Math.random() * 0.5 + 0.2;
+      this.alpha = Math.random() * 0.1 + 0.05;
+      this.ci = Math.floor(Math.random() * COLORS.length);
+      this.delay = Math.random() * 300;
     }
-
     update() {
-      this.y1 -= this.speed;
-      if (this.y1 < -200) this.reset();
+      if (this.delay > 0) { this.delay--; return; }
+      this.r += this.speed;
+      if (this.r > this.maxR) this.reset();
     }
-
     draw() {
-      const col = this.isRed ? `rgba(239,35,60,${this.alpha})` : `rgba(141,153,174,${this.alpha})`;
-      ctx.strokeStyle = col;
-      ctx.lineWidth = 1.5;
-
+      if (this.delay > 0 || this.r <= 0) return;
+      const { r, g, b } = COLORS[this.ci];
+      const a = this.alpha * (1 - this.r / this.maxR);
       ctx.beginPath();
-      ctx.moveTo(this.x1, this.y1);
-      ctx.bezierCurveTo(
-        this.x2, this.y1 - this.cpOffset,
-        this.x2, this.y1 + this.cpOffset,
-        this.x3, this.y1
-      );
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(${r},${g},${b},${a})`;
+      ctx.lineWidth = 1.2;
       ctx.stroke();
     }
   }
 
   // ─── Init ───
-  const blocks = [];
-  for (let i = 0; i < 16; i++) { const b = new LayoutBlock(); b.y = Math.random() * H; blocks.push(b); }
+  const blobs = Array.from({length: 20}, () => new NebulaBlob());
+  const particles = Array.from({length: 120}, () => new Particle());
+  const rings = Array.from({length: 10}, () => new Ring());
 
-  const swatches = [];
-  for (let i = 0; i < 10; i++) { const s = new ColorSwatch(); s.y = Math.random() * H; swatches.push(s); }
+  // ─── Draw network lines between nearby particles ───
+  function drawConnections() {
+    const LINK = 100;
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < LINK) {
+          const { r, g, b } = COLORS[particles[i].ci];
+          const a = (1 - d / LINK) * 0.12;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(${r},${g},${b},${a})`;
+          ctx.lineWidth = 0.7;
+          ctx.stroke();
+        }
+      }
+    }
+  }
 
-  const circles = [];
-  for (let i = 0; i < 14; i++) { const c = new DesignCircle(); c.y = Math.random() * H; circles.push(c); }
-
-  const curves = [];
-  for (let i = 0; i < 8; i++) { const c = new FlowCurve(); c.y1 = Math.random() * H; curves.push(c); }
-
-  // ─── Render ───
+  // ─── Main Render ───
+  let t = 0;
   function render() {
-    ctx.fillStyle = '#2b2d42';
+    t++;
+
+    // Dark background with slight blur trail
+    ctx.fillStyle = 'rgba(5, 5, 15, 0.18)';
     ctx.fillRect(0, 0, W, H);
 
-    // Draw layers back to front
-    for (const c of curves) { c.update(); c.draw(); }
-    for (const c of circles) { c.update(); c.draw(); }
-    for (const b of blocks) { b.update(); b.draw(); }
-    for (const s of swatches) { s.update(); s.draw(); }
+    // Nebula blobs
+    for (const b of blobs) { b.update(); b.draw(); }
+
+    // Stars twinkle
+    for (const s of STARS) {
+      s.phase += s.speed;
+      const { r, g, b } = COLORS[s.ci];
+      const a = 0.3 + 0.7 * ((Math.sin(s.phase) + 1) / 2);
+      ctx.beginPath();
+      ctx.arc(s.x % W, s.y % H, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = s.ci === 0 ? `rgba(255,255,255,${a * 0.5})` : `rgba(${r},${g},${b},${a * 0.4})`;
+      ctx.fill();
+    }
+
+    // Connections + Particles
+    drawConnections();
+    for (const p of particles) { p.update(); p.draw(); }
+
+    // Rings
+    for (const ring of rings) { ring.update(); ring.draw(); }
 
     requestAnimationFrame(render);
   }
 
+  // Initial dark fill
+  ctx.fillStyle = '#05050f';
+  ctx.fillRect(0, 0, W, H);
   render();
   </script>
 </body>
