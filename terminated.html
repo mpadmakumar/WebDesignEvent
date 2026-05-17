@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Terminated | Web Design Competition</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+  <style>
+    .term-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      position: relative;
+      z-index: 10;
+    }
+    .term-box {
+      border: 1px solid rgba(255, 75, 110, 0.4);
+      padding: 60px 80px;
+      background: rgba(10, 10, 30, 0.7);
+      border-radius: 4px;
+      position: relative;
+      box-shadow: 0 0 40px rgba(255, 75, 110, 0.2), inset 0 0 30px rgba(255, 75, 110, 0.05);
+      backdrop-filter: blur(20px);
+      max-width: 800px;
+      width: 90%;
+    }
+    .term-box::before, .term-box::after {
+      content: '';
+      position: absolute;
+      width: 30px; height: 30px;
+      border-color: #ff4b6e;
+      border-style: solid;
+    }
+    .term-box::before { top: -2px; left: -2px; border-width: 3px 0 0 3px; }
+    .term-box::after  { bottom: -2px; right: -2px; border-width: 0 3px 3px 0; }
+
+    .term-title {
+      font-family: var(--font-heading);
+      font-size: 3.5rem;
+      font-weight: 900;
+      margin-bottom: 25px;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ff4b6e 0%, #ffca3a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: pulseAlert 2s infinite alternate;
+    }
+    @keyframes pulseAlert {
+      0% { filter: drop-shadow(0 0 10px rgba(255,75,110,0.4)); }
+      100% { filter: drop-shadow(0 0 25px rgba(255,75,110,0.9)); }
+    }
+
+    .term-user {
+      font-family: var(--font-mono);
+      font-size: 1.8rem;
+      color: #fff;
+      margin-bottom: 30px;
+      letter-spacing: 2px;
+    }
+    .term-user span {
+      color: #32cdaa; /* Keeping a neon green touch for the ID */
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(50, 205, 170, 0.6);
+    }
+
+    .term-text {
+      color: #edf2f4;
+      font-size: 1.15rem;
+      letter-spacing: 2px;
+      line-height: 1.6;
+      font-family: var(--font-mono);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-animate"></div>
+  <div class="term-container">
+    <div class="term-box fade-in">
+      <div class="term-title">> EVENT_TERMINATED</div>
+      <div class="term-user">User: <span id="display-lot">---</span></div>
+      <div class="term-text">
+        Thank you for participating in DesignArena. Your final score and rank will be announced by the coordinators shortly. You may now close this window.
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = Auth.getCurrentUser();
+      if (user && user.lotNumber) {
+        document.getElementById('display-lot').textContent = user.lotNumber;
+      }
+      
+      // If event gets un-terminated (unlikely, but safe), redirect back
+      function checkState() {
+        const settings = Storage.getSettings();
+        if (!settings || !settings.eventEnded) {
+           window.location.href = 'login.html';
+        }
+      }
+      window.addEventListener('firebase-synced', checkState);
+      window.addEventListener('storage', checkState);
+    });
+  </script>
+</body>
+</html>

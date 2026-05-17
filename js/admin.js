@@ -62,6 +62,41 @@ const AdminApp = {
         const totalCopies = logs.reduce((a, l) => a + (l.copyCount || 0), 0);
         const elCopies = document.getElementById('stat-copies');
         if (elCopies) elCopies.textContent = totalCopies;
+
+        const settings = Storage.getSettings();
+        const btnStart = document.getElementById('btn-start-event');
+        if (btnStart) {
+            if (settings && settings.eventStarted) {
+                btnStart.className = 'btn btn-danger btn-sm';
+                btnStart.innerHTML = '⏹ Stop Event';
+            } else {
+                btnStart.className = 'btn btn-success btn-sm';
+                btnStart.innerHTML = '▶ Start Event';
+            }
+        }
+    },
+
+    toggleEventState() {
+        const settings = Storage.getSettings();
+        if (settings.eventEnded) {
+            this.notify('Cannot start. Event has been permanently terminated.', 'error');
+            return;
+        }
+        settings.eventStarted = !settings.eventStarted;
+        Storage.updateSettings({ eventStarted: settings.eventStarted });
+        this.renderDashboardStats();
+        this.notify(settings.eventStarted ? 'Event Started! Participants are now unblocked.' : 'Event Stopped! Participants moved to waiting room.', settings.eventStarted ? 'success' : 'warning');
+    },
+
+    endEvent() {
+        if (confirm("🛑 Are you sure you want to permanently END the event? This will lock out all participants and send them to the Thank You page.")) {
+            const settings = Storage.getSettings();
+            settings.eventEnded = true;
+            settings.eventStarted = false; 
+            Storage.updateSettings({ eventEnded: true, eventStarted: false });
+            this.renderDashboardStats();
+            this.notify("Event officially terminated. All users locked out.", "success");
+        }
     },
 
     renderRecentActivity() {

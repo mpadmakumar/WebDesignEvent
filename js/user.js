@@ -183,14 +183,31 @@ const UserApp = {
         if(edJs) edJs.disabled = isLocked;
         
         const submitBtn = document.getElementById('btn-submit');
+        const finishedOverlay = document.getElementById('finished-overlay');
+
         if (isSubmitted) {
             submitBtn.disabled = true; submitBtn.textContent = '✅ Submitted';
+            if (finishedOverlay) {
+                finishedOverlay.classList.remove('hidden');
+                const titleEl = document.getElementById('finished-overlay-title');
+                const textEl = document.getElementById('finished-overlay-text');
+                if (titleEl) titleEl.textContent = '> TIME_IS_UP';
+                if (textEl) textEl.textContent = 'Event will end soon. Please wait for the administrator';
+            }
         } else if (isEventOver) {
             submitBtn.disabled = true; submitBtn.textContent = '⏰ Event Over';
             this.notify('Global event time has expired!', 'error');
+            if (finishedOverlay) {
+                finishedOverlay.classList.remove('hidden');
+                const titleEl = document.getElementById('finished-overlay-title');
+                const textEl = document.getElementById('finished-overlay-text');
+                if (titleEl) titleEl.textContent = '> TIME_IS_UP';
+                if (textEl) textEl.textContent = 'Event will end soon. Please wait for the administrator';
+            }
         } else {
             submitBtn.disabled = false; submitBtn.textContent = '📤 Submit';
             Tracker.start(this.currentUser.id, this.currentChallenge.id);
+            if (finishedOverlay) finishedOverlay.classList.add('hidden');
         }
 
         // Timer applies to the global event

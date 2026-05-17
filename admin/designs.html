@@ -1,43 +1,43 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Push Designs | Admin</title>
-  <link rel="stylesheet" href="../css/style.css">`n  <script src="../js/loader.js"></script><link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="../css/style.css"><link rel="stylesheet" href="../css/admin.css">
   <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 <div class="admin-layout">
   <aside class="sidebar" id="sidebar">
-    <div class="sidebar-brand"><h2>ðŸŽ¨ DesignArena</h2><small>Admin Panel</small></div>
+    <div class="sidebar-brand"><h2>🎨 DesignArena</h2><small>Admin Panel</small></div>
     <nav class="sidebar-nav">
-      <a href="dashboard.html" class="nav-item" data-page="dashboard"><span class="nav-icon">ðŸ“Š</span> Dashboard</a>
-      <a href="participants.html" class="nav-item" data-page="participants"><span class="nav-icon">ðŸ‘¥</span> Participants</a>
-      <a href="monitoring.html" class="nav-item" data-page="monitoring"><span class="nav-icon">ðŸ“¡</span> Live Monitor</a>
-      <a href="submissions.html" class="nav-item" data-page="submissions"><span class="nav-icon">ðŸ“</span> Submissions</a>
-      <a href="results.html" class="nav-item" data-page="results"><span class="nav-icon">ðŸ†</span> Results</a>
-      <a href="notes.html" class="nav-item" data-page="notes"><span class="nav-icon">ðŸ“‹</span> Notes</a>
-      <a href="designs.html" class="nav-item" data-page="designs"><span class="nav-icon">ðŸ“Œ</span> Push Designs</a>
-      <a href="settings.html" class="nav-item" data-page="settings"><span class="nav-icon">âš™ï¸</span> Settings</a>
+      <a href="dashboard.html" class="nav-item" data-page="dashboard"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="participants.html" class="nav-item" data-page="participants"><span class="nav-icon">👥</span> Participants</a>
+      <a href="monitoring.html" class="nav-item" data-page="monitoring"><span class="nav-icon">📡</span> Live Monitor</a>
+      <a href="submissions.html" class="nav-item" data-page="submissions"><span class="nav-icon">📝</span> Submissions</a>
+      <a href="results.html" class="nav-item" data-page="results"><span class="nav-icon">🏆</span> Results</a>
+      <a href="notes.html" class="nav-item" data-page="notes"><span class="nav-icon">📋</span> Notes</a>
+      <a href="designs.html" class="nav-item" data-page="designs"><span class="nav-icon">📌</span> Push Designs</a>
+      <a href="settings.html" class="nav-item" data-page="settings"><span class="nav-icon">⚙️</span> Settings</a>
     </nav>
-    <div class="sidebar-footer"><button class="btn btn-danger btn-sm" style="width:100%" onclick="AdminApp.logout()">ðŸšª Logout</button></div>
+    <div class="sidebar-footer"><button class="btn btn-danger btn-sm" style="width:100%" onclick="AdminApp.logout()">🚪 Logout</button></div>
   </aside>
   <main class="admin-main">
     <header class="admin-header">
       <div style="display:flex;align-items:center;gap:12px">
-        <button class="sidebar-toggle" onclick="AdminApp.toggleSidebar()">â˜°</button>
-        <h1>ðŸ“Œ Push Designs</h1>
+        <button class="sidebar-toggle" onclick="AdminApp.toggleSidebar()">☰</button>
+        <h1>📌 Push Designs</h1>
       </div>
       <div class="header-actions">
-        <span style="font-size:.85rem;color:var(--text-secondary)">ðŸ‘¤ <span id="admin-name">Admin</span></span>
+        <span style="font-size:.85rem;color:var(--text-secondary)">👤 <span id="admin-name">Admin</span></span>
         <div class="theme-toggle" onclick="AdminApp.toggleTheme()"></div>
       </div>
     </header>
     <div class="admin-content">
       <!-- Push Form -->
       <div class="glass fade-in" style="padding:24px;margin-bottom:24px">
-        <h2 style="font-size:1rem;margin-bottom:4px">ðŸ“¤ Push a Design Reference</h2>
+        <h2 style="font-size:1rem;margin-bottom:4px">📤 Push a Design Reference</h2>
         <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:16px">Participants will see this as a banner on their workspace.</p>
         <div class="form-group">
           <label>Title / Label</label>
@@ -52,7 +52,7 @@
           <input type="file" class="form-control" accept="image/*" onchange="AdminApp.handlePushImageUpload(event)">
           <div id="push-preview"></div>
         </div>
-        <button class="btn btn-primary" onclick="AdminApp.pushDesign()">ðŸ“Œ Push to All Participants</button>
+        <button class="btn btn-primary" onclick="AdminApp.pushDesign()">📌 Push to All Participants</button>
       </div>
 
       <!-- Pushed list -->
@@ -69,4 +69,3 @@
 <script src="../js/storage.js"></script><script src="../js/auth.js"></script><script src="../js/admin.js"></script>
 <script>document.addEventListener('DOMContentLoaded',()=>AdminApp.initDesigns());</script>
 </body></html>
-

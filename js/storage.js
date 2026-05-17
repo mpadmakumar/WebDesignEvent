@@ -247,3 +247,130 @@ const Storage = {
 };
 
 Storage.initDefaults();
+
+// ═══════════════════════════════════════════
+//  INJECT AURORA NEBULA BACKGROUND TO ALL PAGES
+// ═══════════════════════════════════════════
+(function injectBackground() {
+  if (document.getElementById('bg')) return; // Already exists
+  
+  const canvas = document.createElement('canvas');
+  canvas.id = 'bg';
+  canvas.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;';
+  
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay';
+  overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at center, rgba(5,5,15,0.3) 0%, rgba(5,5,15,0.75) 100%); z-index: -1; pointer-events: none;';
+  
+  document.body.prepend(overlay);
+  document.body.prepend(canvas);
+
+  const cv = canvas;
+  const ctx = cv.getContext('2d');
+  let W, H;
+
+  function resize() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const COLORS = [
+    { r:255, g:75,  b:110 },
+    { r:91,  g:140, b:255 },
+    { r:255, g:200, b:58  },
+    { r:120, g:80,  b:255 },
+    { r:50,  g:205, b:170 },
+  ];
+
+  const STARS = [];
+  for (let i = 0; i < 150; i++) {
+    STARS.push({
+      x: Math.random() * 2000, y: Math.random() * 1200,
+      r: Math.random() * 1.3 + 0.2, phase: Math.random() * Math.PI * 2,
+      speed: Math.random() * 0.012 + 0.003, ci: Math.floor(Math.random() * COLORS.length)
+    });
+  }
+
+  class NebulaBlob {
+    constructor() { this.reset(true); }
+    reset(init = false) {
+      this.ci = Math.floor(Math.random() * COLORS.length);
+      this.x = Math.random() * W; this.y = init ? Math.random() * H : H + 150;
+      this.r = Math.random() * 130 + 60;
+      this.vy = -(Math.random() * 0.18 + 0.06); this.vx = (Math.random() - 0.5) * 0.12;
+      this.alpha = Math.random() * 0.05 + 0.02;
+      this.pulse = Math.random() * Math.PI * 2; this.pulseSpeed = Math.random() * 0.008 + 0.003;
+    }
+    update() {
+      this.x += this.vx; this.y += this.vy; this.pulse += this.pulseSpeed;
+      if (this.y < -200) this.reset();
+    }
+    draw() {
+      const { r, g, b } = COLORS[this.ci];
+      const pr = this.r + Math.sin(this.pulse) * 15;
+      const a = this.alpha + Math.sin(this.pulse) * 0.01;
+      const gr = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, pr);
+      gr.addColorStop(0, `rgba(${r},${g},${b},${a * 3})`);
+      gr.addColorStop(0.4, `rgba(${r},${g},${b},${a})`);
+      gr.addColorStop(1, `rgba(${r},${g},${b},0)`);
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(this.x, this.y, pr, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+
+  class Particle {
+    constructor() { this.reset(true); }
+    reset(init = false) {
+      this.ci = Math.floor(Math.random() * COLORS.length);
+      this.x = Math.random() * W; this.y = init ? Math.random() * H : H + 10;
+      this.vy = -(Math.random() * 0.4 + 0.1); this.vx = (Math.random() - 0.5) * 0.3;
+      this.r = Math.random() * 2 + 0.8; this.alpha = Math.random() * 0.5 + 0.3;
+      this.phase = Math.random() * Math.PI * 2; this.phaseSpeed = Math.random() * 0.02 + 0.005;
+    }
+    update() {
+      this.x += this.vx; this.y += this.vy; this.phase += this.phaseSpeed;
+      if (this.y < -10) this.reset();
+    }
+    draw() {
+      const { r, g, b } = COLORS[this.ci];
+      const a = this.alpha * (0.6 + 0.4 * Math.sin(this.phase));
+      ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${r},${g},${b},${a})`;
+      ctx.shadowBlur = 10; ctx.shadowColor = `rgba(${r},${g},${b},0.5)`;
+      ctx.fill(); ctx.shadowBlur = 0;
+    }
+  }
+
+  const blobs = Array.from({length: 15}, () => new NebulaBlob());
+  const particles = Array.from({length: 80}, () => new Particle());
+
+  function drawConnections() {
+    const LINK = 100;
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x; const dy = particles[i].y - particles[j].y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < LINK) {
+          const { r, g, b } = COLORS[particles[i].ci];
+          const a = (1 - d / LINK) * 0.12;
+          ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(${r},${g},${b},${a})`; ctx.lineWidth = 0.7; ctx.stroke();
+        }
+      }
+    }
+  }
+
+  function render() {
+    ctx.fillStyle = 'rgba(5, 5, 15, 0.18)'; ctx.fillRect(0, 0, W, H);
+    for (const b of blobs) { b.update(); b.draw(); }
+    for (const s of STARS) {
+      s.phase += s.speed; const { r, g, b } = COLORS[s.ci];
+      const a = 0.3 + 0.7 * ((Math.sin(s.phase) + 1) / 2);
+      ctx.beginPath(); ctx.arc(s.x % W, s.y % H, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = s.ci === 0 ? `rgba(255,255,255,${a * 0.5})` : `rgba(${r},${g},${b},${a * 0.4})`; ctx.fill();
+    }
+    drawConnections();
+    for (const p of particles) { p.update(); p.draw(); }
+    requestAnimationFrame(render);
+  }
+
+  ctx.fillStyle = '#05050f'; ctx.fillRect(0, 0, W, H); render();
+})();
