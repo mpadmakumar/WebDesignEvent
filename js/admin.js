@@ -79,23 +79,23 @@ const AdminApp = {
     toggleEventState() {
         const settings = Storage.getSettings();
         if (settings.eventEnded) {
-            this.notify('Cannot start. Event has been permanently terminated.', 'error');
-            return;
+            if (!confirm('The event was previously ended. Do you want to reopen it?')) return;
+            settings.eventEnded = false;
         }
         settings.eventStarted = !settings.eventStarted;
-        Storage.updateSettings({ eventStarted: settings.eventStarted });
+        Storage.updateSettings({ eventStarted: settings.eventStarted, eventEnded: settings.eventEnded });
         this.renderDashboardStats();
         this.notify(settings.eventStarted ? 'Event Started! Participants are now unblocked.' : 'Event Stopped! Participants moved to waiting room.', settings.eventStarted ? 'success' : 'warning');
     },
 
     endEvent() {
-        if (confirm("🛑 Are you sure you want to permanently END the event? This will lock out all participants and send them to the Thank You page.")) {
+        if (confirm("🛑 Are you sure you want to END the event? This will lock out all participants and send them to the Thank You page.")) {
             const settings = Storage.getSettings();
             settings.eventEnded = true;
             settings.eventStarted = false; 
             Storage.updateSettings({ eventEnded: true, eventStarted: false });
             this.renderDashboardStats();
-            this.notify("Event officially terminated. All users locked out.", "success");
+            this.notify("Event officially ended. All users locked out.", "success");
         }
     },
 
