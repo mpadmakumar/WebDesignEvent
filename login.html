@@ -47,11 +47,14 @@
       if(result.success){ 
         const settings = Storage.getSettings();
         if(settings && settings.eventEnded) {
-            Auth.logoutParticipant();
-            window.location.href='index.html';
+            window.location.href='terminated.html';
         }
-        else if(settings && settings.eventStarted) window.location.href='user-dashboard.html';
-        else window.location.href='waiting.html';
+        else if(settings && settings.eventStarted) {
+            window.location.href='user-dashboard.html';
+        }
+        else {
+            window.location.href='waiting.html';
+        }
       }
       else {
         const err=document.getElementById('login-error');
