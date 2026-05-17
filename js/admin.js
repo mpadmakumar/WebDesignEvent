@@ -99,6 +99,17 @@ const AdminApp = {
         }
     },
 
+    resetEventState() {
+        if (confirm("🔄 Are you sure you want to RESET the event state? This will push all participants back to the Waiting Room.")) {
+            const settings = Storage.getSettings();
+            settings.eventEnded = false;
+            settings.eventStarted = false;
+            Storage.updateSettings({ eventEnded: false, eventStarted: false });
+            this.renderDashboardStats();
+            this.notify("Event state has been reset to WAITING.", "success");
+        }
+    },
+
     renderRecentActivity() {
         const subs = Storage.getSubmissions().filter(s => s.submitted).slice(-5).reverse();
         const el = document.getElementById('recent-activity');
