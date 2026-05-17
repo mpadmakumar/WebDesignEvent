@@ -46,7 +46,10 @@
       const result=Auth.loginParticipant(lotNumber);
       if(result.success){ 
         const settings = Storage.getSettings();
-        if(settings && settings.eventEnded) window.location.href='terminated.html';
+        if(settings && settings.eventEnded) {
+            Auth.logoutParticipant();
+            window.location.href='index.html';
+        }
         else if(settings && settings.eventStarted) window.location.href='user-dashboard.html';
         else window.location.href='waiting.html';
       }
@@ -57,11 +60,9 @@
         setTimeout(()=>document.getElementById('login-form').classList.remove('shake'),500);
       }
     }
+    // Force fresh login whenever visiting this page
     if(Auth.isParticipantLoggedIn()) {
-        const settings = Storage.getSettings();
-        if(settings && settings.eventEnded) window.location.href='terminated.html';
-        else if(settings && settings.eventStarted) window.location.href='user-dashboard.html';
-        else window.location.href='waiting.html';
+        Auth.logoutParticipant();
     }
   </script>
 </body>
